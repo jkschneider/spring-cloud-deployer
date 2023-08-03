@@ -81,7 +81,7 @@ public class CommandLineTokenizer {
 			}
 		}
 		if (pos == buffer.length && endDelimiter != ' ') {
-			throw new IllegalStateException(String.format("Ran out of input in [%s], expected closing [%s]", new String(buffer), endDelimiter));
+			throw new IllegalStateException("Ran out of input in [%s], expected closing [%s]".formatted(new String(buffer), endDelimiter));
 		}
 		else if (endDelimiter != ' ' && buffer[pos] == endDelimiter) {
 			pos++;

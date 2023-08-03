@@ -45,12 +45,12 @@ public class SchedulerIntegrationTest {
 	public void init() throws InterruptedException {
 		String parameterThatMayNeedEscaping = properties.getParameterThatMayNeedEscaping();
 		if (parameterThatMayNeedEscaping != null && !SchedulerIntegrationTestProperties.FUNNY_CHARACTERS.equals(parameterThatMayNeedEscaping)) {
-			throw new IllegalArgumentException(String.format("Expected 'parameterThatMayNeedEscaping' value to be equal to '%s', but was '%s'", SchedulerIntegrationTestProperties.FUNNY_CHARACTERS, parameterThatMayNeedEscaping));
+			throw new IllegalArgumentException("Expected 'parameterThatMayNeedEscaping' value to be equal to '%s', but was '%s'".formatted(SchedulerIntegrationTestProperties.FUNNY_CHARACTERS, parameterThatMayNeedEscaping));
 		}
 
 		String commandLineArgValueThatMayNeedEscaping = properties.getCommandLineArgValueThatMayNeedEscaping();
 		if (commandLineArgValueThatMayNeedEscaping != null && !SchedulerIntegrationTestProperties.FUNNY_CHARACTERS.equals(commandLineArgValueThatMayNeedEscaping)) {
-			throw new IllegalArgumentException(String.format("Expected 'commandLineArgValueThatMayNeedEscaping' value to be equal to '%s', but was '%s'", SchedulerIntegrationTestProperties.FUNNY_CHARACTERS, commandLineArgValueThatMayNeedEscaping));
+			throw new IllegalArgumentException("Expected 'commandLineArgValueThatMayNeedEscaping' value to be equal to '%s', but was '%s'".formatted(SchedulerIntegrationTestProperties.FUNNY_CHARACTERS, commandLineArgValueThatMayNeedEscaping));
 		}
 
 		Assert.notNull(properties.getInstanceIndex(), "instanceIndex should have been set by deployer or runtime");

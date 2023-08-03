@@ -147,8 +147,8 @@ public class DeployerSocketUtils {
 			do {
 				if (searchCounter > portRange) {
 					throw new IllegalStateException(
-							String.format("Could not find an available %s port in the range [%d, %d] after %d attempts",
-									name(), minPort, maxPort, searchCounter));
+                            "Could not find an available %s port in the range [%d, %d] after %d attempts".formatted(
+                                    name(), minPort, maxPort, searchCounter));
 				}
 				candidatePort = findRandomPort(minPort, maxPort);
 				searchCounter++;
@@ -184,8 +184,8 @@ public class DeployerSocketUtils {
 
 			if (availablePorts.size() != numRequested) {
 				throw new IllegalStateException(
-						String.format("Could not find %d available %s ports in the range [%d, %d]", numRequested,
-								name(), minPort, maxPort));
+                        "Could not find %d available %s ports in the range [%d, %d]".formatted(numRequested,
+                                name(), minPort, maxPort));
 			}
 
 			return availablePorts;

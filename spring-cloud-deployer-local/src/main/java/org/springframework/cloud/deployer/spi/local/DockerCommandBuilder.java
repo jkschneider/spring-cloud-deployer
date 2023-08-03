@@ -74,7 +74,7 @@ public class DockerCommandBuilder implements CommandBuilder {
 	@Override
 	public URL getBaseUrl(String deploymentId, int index, int port) {
 		try {
-			return new URL("http", String.format("%s-%d", deploymentId, index), port, "");
+			return new URL("http", "%s-%d".formatted(deploymentId, index), port, "");
 		}
 		catch (Exception e) {
 			throw new IllegalArgumentException(e);
@@ -113,7 +113,7 @@ public class DockerCommandBuilder implements CommandBuilder {
 		// Add env vars
 		for (String env : appInstanceEnv.keySet()) {
 			commands.add("-e");
-			commands.add(String.format("%s=%s", env, appInstanceEnv.get(env)));
+			commands.add("%s=%s".formatted(env, appInstanceEnv.get(env)));
 		}
 
 		debugAddressOption.ifPresent(debugAddress -> {
@@ -123,14 +123,14 @@ public class DockerCommandBuilder implements CommandBuilder {
 			commands.add("-e");
 			commands.add("JAVA_TOOL_OPTIONS=" + debugCommand);
 			commands.add("-p");
-			commands.add(String.format("%s:%s", debugAddress.getPort(), debugAddress.getPort()));
+			commands.add("%s:%s".formatted(debugAddress.getPort(), debugAddress.getPort()));
 		});
 
 		String port = getPort(appInstanceEnv);
 
 		if (StringUtils.hasText(port)) {
 			commands.add("-p");
-			commands.add(String.format("%s:%s", port, port));
+			commands.add("%s:%s".formatted(port, port));
 		}
 
 		applyPortMappings(commands,localDeployerProperties);
@@ -139,18 +139,18 @@ public class DockerCommandBuilder implements CommandBuilder {
 
 		if (request.getDeploymentProperties().containsKey(DOCKER_CONTAINER_NAME_KEY)) {
 			if (appInstanceNumber.isPresent()) {
-				commands.add(String.format("--name=%s-%d", request.getDeploymentProperties().get(DOCKER_CONTAINER_NAME_KEY), appInstanceNumber.get()));
+				commands.add("--name=%s-%d".formatted(request.getDeploymentProperties().get(DOCKER_CONTAINER_NAME_KEY), appInstanceNumber.get()));
 			}
 			else {
-				commands.add(String.format("--name=%s", request.getDeploymentProperties().get(DOCKER_CONTAINER_NAME_KEY)));
+				commands.add("--name=%s".formatted(request.getDeploymentProperties().get(DOCKER_CONTAINER_NAME_KEY)));
 			}
 		}
 		else {
 			String group = request.getDeploymentProperties().get(AppDeployer.GROUP_PROPERTY_KEY);
 			if (StringUtils.hasText(group)) {
-				String deploymentId = String.format("%s.%s", group, request.getDefinition().getName());
+				String deploymentId = "%s.%s".formatted(group, request.getDefinition().getName());
 				int index = appInstanceNumber.orElse(0);
-				commands.add(String.format("--name=%s-%d", deploymentId, index));
+				commands.add("--name=%s-%d".formatted(deploymentId, index));
 			}
 		}
 

@@ -175,7 +175,7 @@ public abstract class AbstractSchedulerIntegrationTests {
 		scheduleInfo.setScheduleName(request.getScheduleName());
 
 		this.expectedException.expect(CreateScheduleException.class);
-		this.expectedException.expectMessage(String.format("Failed to create schedule %s", request.getScheduleName()));
+		this.expectedException.expectMessage("Failed to create schedule %s".formatted(request.getScheduleName()));
 
 		verifySchedule(scheduleInfo);
 		taskScheduler().schedule(request);
@@ -187,8 +187,8 @@ public abstract class AbstractSchedulerIntegrationTests {
 		String scheduleName = scheduleName() + definitionName;
 
 		this.expectedException.expect(SchedulerException.class);
-		this.expectedException.expectMessage(String.format("Failed to unschedule schedule %s does not exist.",
-				scheduleName));
+		this.expectedException.expectMessage("Failed to unschedule schedule %s does not exist.".formatted(
+                scheduleName));
 		unscheduleTestSchedule(scheduleName);
 	}
 

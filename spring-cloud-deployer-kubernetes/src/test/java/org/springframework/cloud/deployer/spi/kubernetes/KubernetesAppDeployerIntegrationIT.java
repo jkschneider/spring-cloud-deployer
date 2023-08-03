@@ -500,7 +500,7 @@ public class KubernetesAppDeployerIntegrationIT extends AbstractAppDeployerInteg
                     port = svc.getSpec().getPorts().get(0).getPort();
                     success = true;
                     try {
-                        String url = String.format("http://%s:%d/actuator/env", ip, port);
+                        String url = "http://%s:%d/actuator/env".formatted(ip, port);
                         restTemplate.exchange(url,
                                 HttpMethod.GET, HttpEntity.EMPTY,
                                 new ParameterizedTypeReference<LinkedHashMap<String, ArrayList<LinkedHashMap>>>() {
@@ -524,13 +524,13 @@ public class KubernetesAppDeployerIntegrationIT extends AbstractAppDeployerInteg
                     svc = kubernetesClient.services().withName(appId).get();
                 }
             }
-            log.debug(String.format("LoadBalancer Ingress: %s",
+            log.debug("LoadBalancer Ingress: %s".formatted(
                     svc.getStatus().getLoadBalancer().getIngress().toString()));
         }
 
         assertThat(success).as("cannot get service information for " + appId).isFalse();
 
-        String url = String.format("http://%s:%d/actuator/env", ip, port);
+        String url = "http://%s:%d/actuator/env".formatted(ip, port);
         log.debug("getting app environment from " + url);
         restTemplate = new RestTemplate();
 
@@ -1336,8 +1336,10 @@ public class KubernetesAppDeployerIntegrationIT extends AbstractAppDeployerInteg
                 },
                 {
                         "spring.cloud.deployer.kubernetes.initContainer",
-                        "{containerName: 'test', imageName: 'busybox:latest', commands: ['sh', '-c', 'echo hello'], " +
-                                "volumeMounts: [{name: 'test-volume', mountPath: '/tmp', readOnly: true}]}",
+                        """
+                        {containerName: 'test', imageName: 'busybox:latest', commands: ['sh', '-c', 'echo hello'], \
+                        volumeMounts: [{name: 'test-volume', mountPath: '/tmp', readOnly: true}]}\
+                        """,
                 }
         }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
 
@@ -1401,8 +1403,10 @@ public class KubernetesAppDeployerIntegrationIT extends AbstractAppDeployerInteg
                 },
                 {
                         "spring.cloud.deployer.kubernetes.additional-containers",
-                        "[{name: 'c1', image: 'busybox:latest', command: ['sh', '-c', 'echo hello1'], volumeMounts: [{name: 'test-volume', mountPath: '/tmp', readOnly: true}]},"
-                                + "{name: 'c2', image: 'busybox:1.26.1', command: ['sh', '-c', 'echo hello2']}]"
+                        """
+                        [{name: 'c1', image: 'busybox:latest', command: ['sh', '-c', 'echo hello1'], volumeMounts: [{name: 'test-volume', mountPath: '/tmp', readOnly: true}]},\
+                        {name: 'c2', image: 'busybox:1.26.1', command: ['sh', '-c', 'echo hello2']}]\
+                        """
                 }}).collect(Collectors.toMap(data -> data[0], data -> data[1]));
 
         AppDefinition definition = new AppDefinition(randomName(), null);
@@ -1486,8 +1490,10 @@ public class KubernetesAppDeployerIntegrationIT extends AbstractAppDeployerInteg
                 },
                 {
                         "spring.cloud.deployer.kubernetes.additional-containers",
-                        "[{name: 'c1', image: 'busybox:latest', command: ['sh', '-c', 'echo hello1'], volumeMounts: [{name: 'test-volume', mountPath: '/tmp', readOnly: true}]},"
-                                + "{name: 'c2', image: 'busybox:1.26.1', command: ['sh', '-c', 'echo hello2']}]"
+                        """
+                        [{name: 'c1', image: 'busybox:latest', command: ['sh', '-c', 'echo hello1'], volumeMounts: [{name: 'test-volume', mountPath: '/tmp', readOnly: true}]},\
+                        {name: 'c2', image: 'busybox:1.26.1', command: ['sh', '-c', 'echo hello2']}]\
+                        """
                 }}).collect(Collectors.toMap(data -> data[0], data -> data[1]));
 
         AppDefinition definition = new AppDefinition(randomName(), null);
@@ -1568,23 +1574,29 @@ public class KubernetesAppDeployerIntegrationIT extends AbstractAppDeployerInteg
 			deploymentProps.put("spring.cloud.deployer.kubernetes.initContainer",
 					"{ containerName: 'init-container-5150', imageName: 'busybox:latest', commands: ['sh', '-c', 'echo hello']}");
 			deploymentProps.put("spring.cloud.deployer.kubernetes.additional-containers",
-					"[" +
-						"{ name: 'extra-container-5150', image: 'busybox:latest', command: ['sh', '-c'], args: [\"while true; do echo ‘hello 5150’ & sleep 2; done\"]}," +
-						"{ name: 'extra-container-6160', image: 'busybox:latest', command: ['sh', '-c'], args: [\"while true; do echo ‘hello 6160’ & sleep 2; done\"]}" +
-					"]");
+					"""
+                    [\
+                    { name: 'extra-container-5150', image: 'busybox:latest', command: ['sh', '-c'], args: ["while true; do echo ‘hello 5150’ & sleep 2; done"]},\
+                    { name: 'extra-container-6160', image: 'busybox:latest', command: ['sh', '-c'], args: ["while true; do echo ‘hello 6160’ & sleep 2; done"]}\
+                    ]\
+                    """);
 			deploymentProps.put("spring.cloud.deployer.kubernetes.podSecurityContext",
-					"{ fsGroup: 65534" +
-						", fsGroupChangePolicy: Always" +
-						", runAsUser: 65534" +
-						", runAsGroup: 65534" +
-						", seLinuxOptions: { level: \"s0:c123,c456\" }" +
-					"}");
+					"""
+                    { fsGroup: 65534\
+                    , fsGroupChangePolicy: Always\
+                    , runAsUser: 65534\
+                    , runAsGroup: 65534\
+                    , seLinuxOptions: { level: "s0:c123,c456" }\
+                    }\
+                    """);
 			deploymentProps.put("spring.cloud.deployer.kubernetes.containerSecurityContext",
-					"{ allowPrivilegeEscalation: true" +
-						", runAsUser: 65534" +
-						", runAsGroup: 65534" +
-						", seLinuxOptions: { level: \"s0:c123,c777\" }" +
-					"}");
+					"""
+                    { allowPrivilegeEscalation: true\
+                    , runAsUser: 65534\
+                    , runAsGroup: 65534\
+                    , seLinuxOptions: { level: "s0:c123,c777" }\
+                    }\
+                    """);
 
 			AppDefinition definition = new AppDefinition(randomName(), null);
 			AppDeploymentRequest request = new AppDeploymentRequest(definition, testApplication(), deploymentProps);
@@ -1646,18 +1658,22 @@ public class KubernetesAppDeployerIntegrationIT extends AbstractAppDeployerInteg
 			deploymentProps.put(AppDeployer.COUNT_PROPERTY_KEY, "2");
 			deploymentProps.put(AppDeployer.INDEXED_PROPERTY_KEY, "true");
 			deploymentProps.put("spring.cloud.deployer.kubernetes.podSecurityContext",
-					"{ fsGroup: 65534" +
-							", fsGroupChangePolicy: Always" +
-							", runAsUser: 65534" +
-							", runAsGroup: 65534" +
-							", seLinuxOptions: { level: \"s0:c123,c456\" }" +
-							"}");
+					"""
+                    { fsGroup: 65534\
+                    , fsGroupChangePolicy: Always\
+                    , runAsUser: 65534\
+                    , runAsGroup: 65534\
+                    , seLinuxOptions: { level: "s0:c123,c456" }\
+                    }\
+                    """);
 			deploymentProps.put("spring.cloud.deployer.kubernetes.containerSecurityContext",
-					"{ allowPrivilegeEscalation: true" +
-							", runAsUser: 65534" +
-							", runAsGroup: 65534" +
-							", seLinuxOptions: { level: \"s0:c123,c777\" }" +
-							"}");
+					"""
+                    { allowPrivilegeEscalation: true\
+                    , runAsUser: 65534\
+                    , runAsGroup: 65534\
+                    , seLinuxOptions: { level: "s0:c123,c777" }\
+                    }\
+                    """);
 
 			AppDefinition definition = new AppDefinition(randomName(), null);
 			AppDeploymentRequest request = new AppDeploymentRequest(definition, testApplication(), deploymentProps);

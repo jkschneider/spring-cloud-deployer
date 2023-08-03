@@ -265,11 +265,13 @@ public class DefaultContainerFactoryTests {
         Resource resource = getResource();
         Map<String, String> props = new HashMap<>();
         props.put("spring.cloud.deployer.kubernetes.volumeMounts",
-                "["
-                        + "{name: 'testhostpath', mountPath: '/test/hostPath'}, "
-                        + "{name: 'testpvc', mountPath: '/test/pvc', readOnly: 'true'}, "
-                        + "{name: 'testnfs', mountPath: '/test/nfs'}"
-                        + "]");
+                """
+                [\
+                {name: 'testhostpath', mountPath: '/test/hostPath'}, \
+                {name: 'testpvc', mountPath: '/test/pvc', readOnly: 'true'}, \
+                {name: 'testnfs', mountPath: '/test/nfs'}\
+                ]\
+                """);
         AppDeploymentRequest appDeploymentRequest = new AppDeploymentRequest(definition, resource, props);
 
         ContainerConfiguration containerConfiguration = new ContainerConfiguration("app-test", appDeploymentRequest);
@@ -292,10 +294,12 @@ public class DefaultContainerFactoryTests {
 
         props.clear();
         props.put("spring.cloud.deployer.kubernetes.volumeMounts",
-                "["
-                        + "{name: 'testpvc', mountPath: '/test/pvc/overridden'}, "
-                        + "{name: 'testnfs', mountPath: '/test/nfs/overridden', readOnly: 'true'}"
-                        + "]");
+                """
+                [\
+                {name: 'testpvc', mountPath: '/test/pvc/overridden'}, \
+                {name: 'testnfs', mountPath: '/test/nfs/overridden', readOnly: 'true'}\
+                ]\
+                """);
 
         containerConfiguration = new ContainerConfiguration("app-test", appDeploymentRequest);
         container = defaultContainerFactory.create(containerConfiguration);

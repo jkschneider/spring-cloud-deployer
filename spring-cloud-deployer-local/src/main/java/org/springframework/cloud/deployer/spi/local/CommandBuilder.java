@@ -70,6 +70,6 @@ public interface CommandBuilder {
 	 * @return Returns the JDWP options with the provided suspend and address arguments.
 	 */
 	default String getJdwpOptions(String suspend, String address) {
-		return String.format("-agentlib:jdwp=transport=dt_socket,server=y,suspend=%s,address=%s", suspend, address);
+		return "-agentlib:jdwp=transport=dt_socket,server=y,suspend=%s,address=%s".formatted(suspend, address);
 	}
 }

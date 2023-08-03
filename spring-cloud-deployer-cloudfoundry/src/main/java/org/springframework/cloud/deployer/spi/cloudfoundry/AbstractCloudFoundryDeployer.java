@@ -104,14 +104,14 @@ class AbstractCloudFoundryDeployer {
 
 	Set<String> servicesToBind(AppDeploymentRequest request) {
 
-		Set<String> services = this.deploymentProperties.getServices().stream().filter(s->!ServiceParser
-			.getServiceParameters(s).isPresent())
+		Set<String> services = this.deploymentProperties.getServices().stream().filter(s->ServiceParser
+                    .getServiceParameters(s).isEmpty())
 			.collect(Collectors.toSet());
 
 		Set<String> requestServices = ServiceParser.splitServiceProperties(request.getDeploymentProperties().get
 			(CloudFoundryDeploymentProperties.SERVICES_PROPERTY_KEY))
 			.stream()
-			.filter(s-> !ServiceParser.getServiceParameters(s).isPresent())
+			.filter(s-> ServiceParser.getServiceParameters(s).isEmpty())
 			.collect(Collectors.toSet());
 
 		services.addAll(requestServices);
@@ -177,7 +177,7 @@ class AbstractCloudFoundryDeployer {
 	}
 
 	Predicate<Throwable> isNotFoundError() {
-		return t -> t instanceof AbstractCloudFoundryException && ((AbstractCloudFoundryException) t).getStatusCode() == HttpStatus.NOT_FOUND.value();
+		return t -> t instanceof AbstractCloudFoundryException acfe && acfe.getStatusCode() == HttpStatus.NOT_FOUND.value();
 	}
 
 	/**
@@ -206,8 +206,10 @@ class AbstractCloudFoundryDeployer {
 	Path getApplication(AppDeploymentRequest request) {
 		try {
 			logger.info(
-				"Preparing to push an application from {}" +
-					". This may take some time if the artifact must be downloaded from a remote host.",
+				"""
+                Preparing to push an application from {}\
+                . This may take some time if the artifact must be downloaded from a remote host.\
+                """,
 				request.getResource());
 			if (!request.getResource().getURI().toString().startsWith("docker:")) {
 				return request.getResource().getFile().toPath();
@@ -225,8 +227,8 @@ class AbstractCloudFoundryDeployer {
 	 */
 	protected Consumer<Throwable> logError(String msg) {
 		return e -> {
-			if (e instanceof UnknownCloudFoundryException) {
-				logger.error(msg + "\nUnknownCloudFoundryException encountered, whose payload follows:\n" + ((UnknownCloudFoundryException)e).getPayload(), e);
+			if (e instanceof UnknownCloudFoundryException exception) {
+				logger.error(msg + "\nUnknownCloudFoundryException encountered, whose payload follows:\n" + exception.getPayload(), e);
 			} else {
 				logger.error(msg, e);
 			}
@@ -255,9 +257,9 @@ class AbstractCloudFoundryDeployer {
 				if (e instanceof TimeoutException) {
 					logger.warn("Error getting status for {} within {}ms, Retrying operation.", id, requestTimeoutToUse);
 				}
-				else if (e instanceof UnknownCloudFoundryException) {
+				else if (e instanceof UnknownCloudFoundryException exception) {
 					logger.warn("Received UnknownCloudFoundryException from cf with payload={}",
-							((UnknownCloudFoundryException) e).getPayload());
+							exception.getPayload());
 				}
 				else {
 					logger.warn("Received error from cf", e);
@@ -307,8 +309,10 @@ class AbstractCloudFoundryDeployer {
 			}
 
 		} catch(IOException e){
-			logger.warn("Exception deleting the application resource after successful CF push request."
-					+ " This could cause increase in disk space usage. Exception message: " + e.getMessage());
+			logger.warn("""
+                    Exception deleting the application resource after successful CF push request.\
+                     This could cause increase in disk space usage. Exception message: \
+                    """ + e.getMessage());
 		}
 	}
 
@@ -370,8 +374,8 @@ class AbstractCloudFoundryDeployer {
 	}
 
 	protected boolean hasCfEnv(Resource resource) {
-		if (resource instanceof CfEnvAwareResource) {
-			return ((CfEnvAwareResource)resource).hasCfEnv();
+		if (resource instanceof CfEnvAwareResource awareResource) {
+			return awareResource.hasCfEnv();
 		}
 		return CfEnvAwareResource.of(resource).hasCfEnv();
 	}

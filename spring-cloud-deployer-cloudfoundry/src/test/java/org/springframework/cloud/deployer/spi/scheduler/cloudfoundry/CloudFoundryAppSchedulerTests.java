@@ -224,20 +224,24 @@ public class CloudFoundryAppSchedulerTests {
 		cronMap.put(SchedulerPropertyKeys.CRON_EXPRESSION, DEFAULT_CRON_EXPRESSION);
 
 		ScheduleRequest request = new ScheduleRequest(definition, cronMap, (List<String>) null,
-				"j1-scdf-itcouldbesaidthatthisislongtoowaytoo-oopsitcouldbesaidthatthisis" +
-						"longtoowaytoo-oopsitcouldbesaidthatthisislongtoowaytoo-oopsitcouldbe" +
-						"saidthatthisislongtoowaytoo-oopsitcouldbesaidthatthisislongtoowaytoo-" +
-						"oopsitcouldbesaidthatthisislongtoowaytoo-oops12", resource);
+				"""
+                j1-scdf-itcouldbesaidthatthisislongtoowaytoo-oopsitcouldbesaidthatthisis\
+                longtoowaytoo-oopsitcouldbesaidthatthisislongtoowaytoo-oopsitcouldbe\
+                saidthatthisislongtoowaytoo-oopsitcouldbesaidthatthisislongtoowaytoo-\
+                oopsitcouldbesaidthatthisislongtoowaytoo-oops12\
+                """, resource);
 
 		assertThatThrownBy(() -> {
 			getCloudFoundryAppScheduler(isDeprecated).schedule(request);
 		}).isInstanceOf(CreateScheduleException.class).hasMessageContaining(
-			"Schedule can not be created because its name " +
-			"'j1-scdf-itcouldbesaidthatthisislongtoowaytoo-oopsitcouldbesaidthatthisis" +
-			"longtoowaytoo-oopsitcouldbesaidthatthisislongtoowaytoo-oopsitcouldbe" +
-			"saidthatthisislongtoowaytoo-oopsitcouldbesaidthatthisislongtoowaytoo-" +
-			"oopsitcouldbesaidthatthisislongtoowaytoo-oops12' has too many characters.  " +
-			"Schedule name length must be 255 characters or less");
+			"""
+            Schedule can not be created because its name \
+            'j1-scdf-itcouldbesaidthatthisislongtoowaytoo-oopsitcouldbesaidthatthisis\
+            longtoowaytoo-oopsitcouldbesaidthatthisislongtoowaytoo-oopsitcouldbe\
+            saidthatthisislongtoowaytoo-oopsitcouldbesaidthatthisislongtoowaytoo-\
+            oopsitcouldbesaidthatthisislongtoowaytoo-oops12' has too many characters.  \
+            Schedule name length must be 255 characters or less\
+            """);
 
 		assertThat(((TestJobs) this.client.jobs()).getCreateJobResponse()).isNull();
 	}

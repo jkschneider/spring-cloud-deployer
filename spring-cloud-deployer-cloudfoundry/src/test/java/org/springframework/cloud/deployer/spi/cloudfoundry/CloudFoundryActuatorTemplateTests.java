@@ -100,7 +100,7 @@ public class CloudFoundryActuatorTemplateTests extends AbstractAppDeployerTestSu
 	@Override
 	protected void postSetUp() {
 		this.actuatorOperations = new CloudFoundryActuatorTemplate(new RestTemplate(), this.deployer, new AppAdmin());
-		this.appBaseUrl = String.format("localhost:%s", mockActuator.getPort());
+		this.appBaseUrl = "localhost:%s".formatted(mockActuator.getPort());
 		givenRequestGetApplication("test-application-id", Mono.just(ApplicationDetail.builder()
 				.diskQuota(0)
 				.id("test-application-id")

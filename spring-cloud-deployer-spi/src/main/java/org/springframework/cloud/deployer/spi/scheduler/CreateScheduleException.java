@@ -25,6 +25,6 @@ package org.springframework.cloud.deployer.spi.scheduler;
 public class CreateScheduleException extends SchedulerException{
 
 	public CreateScheduleException(String scheduleName, Throwable t) {
-		super(String.format("Failed to create schedule %s",scheduleName), t);
+		super("Failed to create schedule %s".formatted(scheduleName), t);
 	}
 }

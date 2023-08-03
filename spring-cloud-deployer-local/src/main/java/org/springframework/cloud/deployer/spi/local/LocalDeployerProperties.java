@@ -397,8 +397,10 @@ public class LocalDeployerProperties {
 	}
 
 	public void setDebugPort(Integer debugPort) {
-		logger.warn("The debugPort is deprecated! It supports only pre Java 9 environments. " +
-			"Please use the debugAddress property instead!");
+		logger.warn("""
+            The debugPort is deprecated! It supports only pre Java 9 environments. \
+            Please use the debugAddress property instead!\
+            """);
 		this.debugPort = debugPort;
 	}
 
@@ -564,8 +566,10 @@ public class LocalDeployerProperties {
 					+ "' is not executable.");
 			javaExecutablePath = javaExecutable.getAbsolutePath();
 		} else {
-			logger.warn("System property 'java.home' and 'spring.cloud.deployer.local.{}.javaHomePath' is not set. " +
-				"Defaulting to the java executable path as " + JAVA_COMMAND + " assuming it's in PATH.", bootVersion);
+			logger.warn("""
+                System property 'java.home' and 'spring.cloud.deployer.local.{}.javaHomePath' is not set. \
+                Defaulting to the java executable path as \
+                """ + JAVA_COMMAND + " assuming it's in PATH.", bootVersion);
 		}
 		return javaExecutablePath;
 	}

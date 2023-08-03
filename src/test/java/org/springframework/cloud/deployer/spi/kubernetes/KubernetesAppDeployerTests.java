@@ -105,8 +105,12 @@ public class KubernetesAppDeployerTests {
     public void deployWithVolumesAndVolumeMounts() throws Exception {
         AppDefinition definition = new AppDefinition("app-test", null);
         Map<String, String> props = new HashMap<>();
-        props.put("spring.cloud.deployer.kubernetes.volumeMounts", "[" + "{name: 'testpvc', mountPath: '/test/pvc'}, "
-                + "{name: 'testnfs', mountPath: '/test/nfs', readOnly: 'true'}" + "]");
+        props.put("spring.cloud.deployer.kubernetes.volumeMounts", """
+                [\
+                {name: 'testpvc', mountPath: '/test/pvc'}, \
+                {name: 'testnfs', mountPath: '/test/nfs', readOnly: 'true'}\
+                ]\
+                """);
         AppDeploymentRequest appDeploymentRequest = new AppDeploymentRequest(definition, getResource(), props);
 
         deployer = k8sAppDeployer();
@@ -120,12 +124,20 @@ public class KubernetesAppDeployerTests {
 
         props.clear();
         props.put("spring.cloud.deployer.kubernetes.volumes",
-                "[" + "{name: testhostpath, hostPath: { path: '/test/override/hostPath' }},"
-                        + "{name: 'testnfs', nfs: { server: '192.168.1.1:111', path: '/test/override/nfs' }} " + "]");
+                """
+                [\
+                {name: testhostpath, hostPath: { path: '/test/override/hostPath' }},\
+                {name: 'testnfs', nfs: { server: '192.168.1.1:111', path: '/test/override/nfs' }} \
+                ]\
+                """);
         props.put("spring.cloud.deployer.kubernetes.volumeMounts",
-                "[" + "{name: 'testhostpath', mountPath: '/test/hostPath'}, "
-                        + "{name: 'testpvc', mountPath: '/test/pvc'}, "
-                        + "{name: 'testnfs', mountPath: '/test/nfs', readOnly: 'true'}" + "]");
+                """
+                [\
+                {name: 'testhostpath', mountPath: '/test/hostPath'}, \
+                {name: 'testpvc', mountPath: '/test/pvc'}, \
+                {name: 'testnfs', mountPath: '/test/nfs', readOnly: 'true'}\
+                ]\
+                """);
         appDeploymentRequest = new AppDeploymentRequest(definition, getResource(), props);
 
         deployer = k8sAppDeployer();
@@ -374,8 +386,10 @@ public class KubernetesAppDeployerTests {
 
         Map<String, String> props = new HashMap<>();
         props.put("spring.cloud.deployer.kubernetes.tolerations",
-                "[{key: 'test', value: 'true', operator: 'Equal', effect: 'NoSchedule', tolerationSeconds: 5}, "
-                        + "{key: 'test2', value: 'false', operator: 'Equal', effect: 'NoSchedule', tolerationSeconds: 5}]");
+                """
+                [{key: 'test', value: 'true', operator: 'Equal', effect: 'NoSchedule', tolerationSeconds: 5}, \
+                {key: 'test2', value: 'false', operator: 'Equal', effect: 'NoSchedule', tolerationSeconds: 5}]\
+                """);
 
         AppDeploymentRequest appDeploymentRequest = new AppDeploymentRequest(definition, getResource(), props);
 
@@ -394,8 +408,10 @@ public class KubernetesAppDeployerTests {
 
         Map<String, String> props = new HashMap<>();
         props.put("spring.cloud.deployer.kubernetes.tolerations",
-                "[{key: 'test', value: 'true', operator: 'Equal', effect: 'NoSchedule', tolerationSeconds: 5}, "
-                        + "{key: 'test2', value: 'false', operator: 'Equal', effect: 'NoSchedule', tolerationSeconds: 5}]");
+                """
+                [{key: 'test', value: 'true', operator: 'Equal', effect: 'NoSchedule', tolerationSeconds: 5}, \
+                {key: 'test2', value: 'false', operator: 'Equal', effect: 'NoSchedule', tolerationSeconds: 5}]\
+                """);
 
         AppDeploymentRequest appDeploymentRequest = new AppDeploymentRequest(definition, getResource(), props);
 
@@ -551,8 +567,10 @@ public class KubernetesAppDeployerTests {
     public void testSecretKeyRefMultiple() {
         Map<String, String> props = new HashMap<>();
         props.put("spring.cloud.deployer.kubernetes.secretKeyRefs",
-                "[{envVarName: 'SECRET_PASSWORD', secretName: 'mySecret', dataKey: 'password'}," +
-                        "{envVarName: 'SECRET_USERNAME', secretName: 'mySecret2', dataKey: 'username'}]");
+                """
+                [{envVarName: 'SECRET_PASSWORD', secretName: 'mySecret', dataKey: 'password'},\
+                {envVarName: 'SECRET_USERNAME', secretName: 'mySecret2', dataKey: 'username'}]\
+                """);
 
         AppDefinition definition = new AppDefinition("app-test", null);
         AppDeploymentRequest appDeploymentRequest = new AppDeploymentRequest(definition, getResource(), props);
@@ -607,8 +625,10 @@ public class KubernetesAppDeployerTests {
     public void testSecretKeyRefPropertyOverride() {
         Map<String, String> props = new HashMap<>();
         props.put("spring.cloud.deployer.kubernetes.secretKeyRefs",
-                "[{envVarName: 'SECRET_PASSWORD_GLOBAL', secretName: 'mySecret', dataKey: 'password'}," +
-                        "{envVarName: 'SECRET_USERNAME', secretName: 'mySecret2', dataKey: 'username'}]");
+                """
+                [{envVarName: 'SECRET_PASSWORD_GLOBAL', secretName: 'mySecret', dataKey: 'password'},\
+                {envVarName: 'SECRET_USERNAME', secretName: 'mySecret2', dataKey: 'username'}]\
+                """);
 
         AppDefinition definition = new AppDefinition("app-test", null);
         AppDeploymentRequest appDeploymentRequest = new AppDeploymentRequest(definition, getResource(), props);
@@ -706,8 +726,10 @@ public class KubernetesAppDeployerTests {
     public void testConfigMapKeyRefMultiple() {
         Map<String, String> props = new HashMap<>();
         props.put("spring.cloud.deployer.kubernetes.configMapKeyRefs",
-                "[{envVarName: 'MY_ENV', configMapName: 'myConfigMap', dataKey: 'envName'}," +
-                        "{envVarName: 'ENV_VALUES', configMapName: 'myOtherConfigMap', dataKey: 'diskType'}]");
+                """
+                [{envVarName: 'MY_ENV', configMapName: 'myConfigMap', dataKey: 'envName'},\
+                {envVarName: 'ENV_VALUES', configMapName: 'myOtherConfigMap', dataKey: 'diskType'}]\
+                """);
 
         AppDefinition definition = new AppDefinition("app-test", null);
         AppDeploymentRequest appDeploymentRequest = new AppDeploymentRequest(definition, getResource(), props);
@@ -762,8 +784,10 @@ public class KubernetesAppDeployerTests {
     public void testConfigMapKeyRefPropertyOverride() {
         Map<String, String> props = new HashMap<>();
         props.put("spring.cloud.deployer.kubernetes.configMapKeyRefs",
-                "[{envVarName: 'MY_ENV', configMapName: 'myConfigMap', dataKey: 'envName'}," +
-                        "{envVarName: 'ENV_VALUES', configMapName: 'myOtherConfigMap', dataKey: 'diskType'}]");
+                """
+                [{envVarName: 'MY_ENV', configMapName: 'myConfigMap', dataKey: 'envName'},\
+                {envVarName: 'ENV_VALUES', configMapName: 'myOtherConfigMap', dataKey: 'diskType'}]\
+                """);
 
         AppDefinition definition = new AppDefinition("app-test", null);
         AppDeploymentRequest appDeploymentRequest = new AppDeploymentRequest(definition, getResource(), props);
@@ -838,21 +862,23 @@ public class KubernetesAppDeployerTests {
     public void testNodeAffinityProperty() {
         Map<String, String> props = new HashMap<>();
         props.put("spring.cloud.deployer.kubernetes.affinity.nodeAffinity",
-                "{ requiredDuringSchedulingIgnoredDuringExecution:" +
-                        "  { nodeSelectorTerms:" +
-                        "    [ { matchExpressions:" +
-                        "        [ { key: 'kubernetes.io/e2e-az-name', " +
-                        "            operator: 'In'," +
-                        "            values:" +
-                        "            [ 'e2e-az1', 'e2e-az2']}]}]}, " +
-                        "  preferredDuringSchedulingIgnoredDuringExecution:" +
-                        "  [ { weight: 1," +
-                        "      preference:" +
-                        "      { matchExpressions:" +
-                        "        [ { key: 'another-node-label-key'," +
-                        "            operator: 'In'," +
-                        "            values:" +
-                        "            [ 'another-node-label-value' ]}]}}]}");
+                """
+                { requiredDuringSchedulingIgnoredDuringExecution:\
+                  { nodeSelectorTerms:\
+                    [ { matchExpressions:\
+                        [ { key: 'kubernetes.io/e2e-az-name', \
+                            operator: 'In',\
+                            values:\
+                            [ 'e2e-az1', 'e2e-az2']}]}]}, \
+                  preferredDuringSchedulingIgnoredDuringExecution:\
+                  [ { weight: 1,\
+                      preference:\
+                      { matchExpressions:\
+                        [ { key: 'another-node-label-key',\
+                            operator: 'In',\
+                            values:\
+                            [ 'another-node-label-value' ]}]}}]}\
+                """);
 
         AppDefinition definition = new AppDefinition("app-test", null);
         AppDeploymentRequest appDeploymentRequest = new AppDeploymentRequest(definition, getResource(), props);
@@ -870,24 +896,26 @@ public class KubernetesAppDeployerTests {
     public void testPodAffinityProperty() {
         Map<String, String> props = new HashMap<>();
         props.put("spring.cloud.deployer.kubernetes.affinity.podAffinity",
-                "{ requiredDuringSchedulingIgnoredDuringExecution:" +
-                        "  { labelSelector:" +
-                        "    [ { matchExpressions:" +
-                        "        [ { key: 'app', " +
-                        "            operator: 'In'," +
-                        "            values:" +
-                        "            [ 'store']}]}], " +
-                        "     topologyKey: 'kubernetes.io/hostname'}, " +
-                        "  preferredDuringSchedulingIgnoredDuringExecution:" +
-                        "  [ { weight: 1," +
-                        "      podAffinityTerm:" +
-                        "      { labelSelector:" +
-                        "        { matchExpressions:" +
-                        "          [ { key: 'security'," +
-                        "              operator: 'In'," +
-                        "              values:" +
-                        "              [ 'S2' ]}]}, " +
-                        "        topologyKey: 'failure-domain.beta.kubernetes.io/zone'}}]}");
+                """
+                { requiredDuringSchedulingIgnoredDuringExecution:\
+                  { labelSelector:\
+                    [ { matchExpressions:\
+                        [ { key: 'app', \
+                            operator: 'In',\
+                            values:\
+                            [ 'store']}]}], \
+                     topologyKey: 'kubernetes.io/hostname'}, \
+                  preferredDuringSchedulingIgnoredDuringExecution:\
+                  [ { weight: 1,\
+                      podAffinityTerm:\
+                      { labelSelector:\
+                        { matchExpressions:\
+                          [ { key: 'security',\
+                              operator: 'In',\
+                              values:\
+                              [ 'S2' ]}]}, \
+                        topologyKey: 'failure-domain.beta.kubernetes.io/zone'}}]}\
+                """);
 
         AppDefinition definition = new AppDefinition("app-test", null);
         AppDeploymentRequest appDeploymentRequest = new AppDeploymentRequest(definition, getResource(), props);
@@ -905,24 +933,26 @@ public class KubernetesAppDeployerTests {
     public void testPodAntiAffinityProperty() {
         Map<String, String> props = new HashMap<>();
         props.put("spring.cloud.deployer.kubernetes.affinity.podAntiAffinity",
-                "{ requiredDuringSchedulingIgnoredDuringExecution:" +
-                        "  { labelSelector:" +
-                        "    [ { matchExpressions:" +
-                        "        [ { key: 'app', " +
-                        "            operator: 'In'," +
-                        "            values:" +
-                        "            [ 'store']}]}], " +
-                        "     topologyKey: 'kubernetes.io/hostname'}, " +
-                        "  preferredDuringSchedulingIgnoredDuringExecution:" +
-                        "  [ { weight: 1," +
-                        "      podAffinityTerm:" +
-                        "      { labelSelector:" +
-                        "        { matchExpressions:" +
-                        "          [ { key: 'security'," +
-                        "              operator: 'In'," +
-                        "              values:" +
-                        "              [ 'S2' ]}]}, " +
-                        "        topologyKey: 'failure-domain.beta.kubernetes.io/zone'}}]}");
+                """
+                { requiredDuringSchedulingIgnoredDuringExecution:\
+                  { labelSelector:\
+                    [ { matchExpressions:\
+                        [ { key: 'app', \
+                            operator: 'In',\
+                            values:\
+                            [ 'store']}]}], \
+                     topologyKey: 'kubernetes.io/hostname'}, \
+                  preferredDuringSchedulingIgnoredDuringExecution:\
+                  [ { weight: 1,\
+                      podAffinityTerm:\
+                      { labelSelector:\
+                        { matchExpressions:\
+                          [ { key: 'security',\
+                              operator: 'In',\
+                              values:\
+                              [ 'S2' ]}]}, \
+                        topologyKey: 'failure-domain.beta.kubernetes.io/zone'}}]}\
+                """);
 
         AppDefinition definition = new AppDefinition("app-test", null);
         AppDeploymentRequest appDeploymentRequest = new AppDeploymentRequest(definition, getResource(), props);
@@ -1102,21 +1132,23 @@ public class KubernetesAppDeployerTests {
     public void testNodeAffinityPropertyOverrideGlobal() {
         Map<String, String> props = new HashMap<>();
         props.put("spring.cloud.deployer.kubernetes.affinity.nodeAffinity",
-                "{ requiredDuringSchedulingIgnoredDuringExecution:" +
-                        "  { nodeSelectorTerms:" +
-                        "    [ { matchExpressions:" +
-                        "        [ { key: 'kubernetes.io/e2e-az-name', " +
-                        "            operator: 'In'," +
-                        "            values:" +
-                        "            [ 'e2e-az1', 'e2e-az2']}]}]}, " +
-                        "  preferredDuringSchedulingIgnoredDuringExecution:" +
-                        "  [ { weight: 1," +
-                        "      preference:" +
-                        "      { matchExpressions:" +
-                        "        [ { key: 'another-node-label-key'," +
-                        "            operator: 'In'," +
-                        "            values:" +
-                        "            [ 'another-node-label-value' ]}]}}]}");
+                """
+                { requiredDuringSchedulingIgnoredDuringExecution:\
+                  { nodeSelectorTerms:\
+                    [ { matchExpressions:\
+                        [ { key: 'kubernetes.io/e2e-az-name', \
+                            operator: 'In',\
+                            values:\
+                            [ 'e2e-az1', 'e2e-az2']}]}]}, \
+                  preferredDuringSchedulingIgnoredDuringExecution:\
+                  [ { weight: 1,\
+                      preference:\
+                      { matchExpressions:\
+                        [ { key: 'another-node-label-key',\
+                            operator: 'In',\
+                            values:\
+                            [ 'another-node-label-value' ]}]}}]}\
+                """);
 
         AppDefinition definition = new AppDefinition("app-test", null);
         AppDeploymentRequest appDeploymentRequest = new AppDeploymentRequest(definition, getResource(), props);
@@ -1152,24 +1184,26 @@ public class KubernetesAppDeployerTests {
     public void testPodAffinityPropertyOverrideGlobal() {
         Map<String, String> props = new HashMap<>();
         props.put("spring.cloud.deployer.kubernetes.affinity.podAffinity",
-                "{ requiredDuringSchedulingIgnoredDuringExecution:" +
-                        "  { labelSelector:" +
-                        "    [ { matchExpressions:" +
-                        "        [ { key: 'security', " +
-                        "            operator: 'In'," +
-                        "            values:" +
-                        "            [ 'S1']}]}], " +
-                        "     topologyKey: 'failure-domain.beta.kubernetes.io/zone'}, " +
-                        "  preferredDuringSchedulingIgnoredDuringExecution:" +
-                        "  [ { weight: 1," +
-                        "      podAffinityTerm:" +
-                        "      { labelSelector:" +
-                        "        { matchExpressions:" +
-                        "          [ { key: 'security'," +
-                        "              operator: 'In'," +
-                        "              values:" +
-                        "              [ 'S2' ]}]}, " +
-                        "        topologyKey: 'failure-domain.beta.kubernetes.io/zone'}}]}");
+                """
+                { requiredDuringSchedulingIgnoredDuringExecution:\
+                  { labelSelector:\
+                    [ { matchExpressions:\
+                        [ { key: 'security', \
+                            operator: 'In',\
+                            values:\
+                            [ 'S1']}]}], \
+                     topologyKey: 'failure-domain.beta.kubernetes.io/zone'}, \
+                  preferredDuringSchedulingIgnoredDuringExecution:\
+                  [ { weight: 1,\
+                      podAffinityTerm:\
+                      { labelSelector:\
+                        { matchExpressions:\
+                          [ { key: 'security',\
+                              operator: 'In',\
+                              values:\
+                              [ 'S2' ]}]}, \
+                        topologyKey: 'failure-domain.beta.kubernetes.io/zone'}}]}\
+                """);
 
         AppDefinition definition = new AppDefinition("app-test", null);
         AppDeploymentRequest appDeploymentRequest = new AppDeploymentRequest(definition, getResource(), props);
@@ -1204,24 +1238,26 @@ public class KubernetesAppDeployerTests {
     public void testPodAntiAffinityPropertyOverrideGlobal() {
         Map<String, String> props = new HashMap<>();
         props.put("spring.cloud.deployer.kubernetes.affinity.podAntiAffinity",
-                "{ requiredDuringSchedulingIgnoredDuringExecution:" +
-                        "  { labelSelector:" +
-                        "    [ { matchExpressions:" +
-                        "        [ { key: 'app', " +
-                        "            operator: 'In'," +
-                        "            values:" +
-                        "            [ 'store']}]}], " +
-                        "     topologyKey: 'kubernetes.io/hostnam'}, " +
-                        "  preferredDuringSchedulingIgnoredDuringExecution:" +
-                        "  [ { weight: 1," +
-                        "      podAffinityTerm:" +
-                        "      { labelSelector:" +
-                        "        { matchExpressions:" +
-                        "          [ { key: 'security'," +
-                        "              operator: 'In'," +
-                        "              values:" +
-                        "              [ 'S2' ]}]}, " +
-                        "        topologyKey: 'failure-domain.beta.kubernetes.io/zone'}}]}");
+                """
+                { requiredDuringSchedulingIgnoredDuringExecution:\
+                  { labelSelector:\
+                    [ { matchExpressions:\
+                        [ { key: 'app', \
+                            operator: 'In',\
+                            values:\
+                            [ 'store']}]}], \
+                     topologyKey: 'kubernetes.io/hostnam'}, \
+                  preferredDuringSchedulingIgnoredDuringExecution:\
+                  [ { weight: 1,\
+                      podAffinityTerm:\
+                      { labelSelector:\
+                        { matchExpressions:\
+                          [ { key: 'security',\
+                              operator: 'In',\
+                              values:\
+                              [ 'S2' ]}]}, \
+                        topologyKey: 'failure-domain.beta.kubernetes.io/zone'}}]}\
+                """);
 
         AppDefinition definition = new AppDefinition("app-test", null);
         AppDeploymentRequest appDeploymentRequest = new AppDeploymentRequest(definition, getResource(), props);
@@ -1261,18 +1297,20 @@ public class KubernetesAppDeployerTests {
         void createdFromDeploymentPropertyWithAllFields() {
             KubernetesDeployerProperties globalDeployerProps = new KubernetesDeployerProperties();
             Map<String, String> deploymentProps = new HashMap<>();
-			deploymentProps.put("spring.cloud.deployer.kubernetes.podSecurityContext", "{" +
-					"  fsGroup: 65534" +
-					", fsGroupChangePolicy: Always" +
-					", runAsUser: 65534" +
-					", runAsGroup: 65534" +
-					", runAsNonRoot: true" +
-					", seLinuxOptions: { level: \"s0:c123,c456\" }" +
-					", seccompProfile: { type: Localhost, localhostProfile: my-profiles/profile-allow.json }" +
-					", supplementalGroups: [65534, 65535]" +
-					", sysctls: [{name: \"kernel.shm_rmid_forced\", value: 0}, {name: \"net.core.somaxconn\", value: 1024}]" +
-					", windowsOptions: { gmsaCredentialSpec: \"specA\", gmsaCredentialSpecName: \"specA-name\", hostProcess: true, runAsUserName: \"userA\" }" +
-					"}");
+			deploymentProps.put("spring.cloud.deployer.kubernetes.podSecurityContext", """
+                    {\
+                      fsGroup: 65534\
+                    , fsGroupChangePolicy: Always\
+                    , runAsUser: 65534\
+                    , runAsGroup: 65534\
+                    , runAsNonRoot: true\
+                    , seLinuxOptions: { level: "s0:c123,c456" }\
+                    , seccompProfile: { type: Localhost, localhostProfile: my-profiles/profile-allow.json }\
+                    , supplementalGroups: [65534, 65535]\
+                    , sysctls: [{name: "kernel.shm_rmid_forced", value: 0}, {name: "net.core.somaxconn", value: 1024}]\
+                    , windowsOptions: { gmsaCredentialSpec: "specA", gmsaCredentialSpecName: "specA-name", hostProcess: true, runAsUserName: "userA" }\
+                    }\
+                    """);
             PodSecurityContext expectedPodSecurityContext = new PodSecurityContextBuilder()
 					.withFsGroup(65534L)
 					.withFsGroupChangePolicy("Always")
@@ -1425,19 +1463,21 @@ public class KubernetesAppDeployerTests {
         void createdFromDeploymentPropertyWithAllFields() {
             KubernetesDeployerProperties globalDeployerProps = new KubernetesDeployerProperties();
             Map<String, String> deploymentProps = new HashMap<>();
-			deploymentProps.put("spring.cloud.deployer.kubernetes.containerSecurityContext", "{" +
-					"  allowPrivilegeEscalation: true" +
-					", capabilities: { add: [ \"a\", \"b\" ], drop: [ \"c\" ] }" +
-					", privileged: true" +
-					", procMount: DefaultProcMount" +
-					", readOnlyRootFilesystem: true" +
-					", runAsUser: 65534" +
-					", runAsGroup: 65534" +
-					", runAsNonRoot: true" +
-					", seLinuxOptions: { level: \"s0:c123,c456\" }" +
-					", seccompProfile: { type: Localhost, localhostProfile: my-profiles/profile-allow.json }" +
-					", windowsOptions: { gmsaCredentialSpec: \"specA\", gmsaCredentialSpecName: \"specA-name\", hostProcess: true, runAsUserName: \"userA\" }" +
-					"}");
+			deploymentProps.put("spring.cloud.deployer.kubernetes.containerSecurityContext", """
+                    {\
+                      allowPrivilegeEscalation: true\
+                    , capabilities: { add: [ "a", "b" ], drop: [ "c" ] }\
+                    , privileged: true\
+                    , procMount: DefaultProcMount\
+                    , readOnlyRootFilesystem: true\
+                    , runAsUser: 65534\
+                    , runAsGroup: 65534\
+                    , runAsNonRoot: true\
+                    , seLinuxOptions: { level: "s0:c123,c456" }\
+                    , seccompProfile: { type: Localhost, localhostProfile: my-profiles/profile-allow.json }\
+                    , windowsOptions: { gmsaCredentialSpec: "specA", gmsaCredentialSpecName: "specA-name", hostProcess: true, runAsUserName: "userA" }\
+                    }\
+                    """);
 			SecurityContext expectedContainerSecurityContext = new SecurityContextBuilder()
                     .withAllowPrivilegeEscalation(true)
 					.withCapabilities(new Capabilities(Arrays.asList("a", "b"), Arrays.asList("c")))

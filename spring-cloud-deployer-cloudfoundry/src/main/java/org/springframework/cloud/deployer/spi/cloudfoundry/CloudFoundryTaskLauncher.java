@@ -93,8 +93,8 @@ public class CloudFoundryTaskLauncher extends AbstractCloudFoundryTaskLauncher {
 		final AppDeploymentRequest request = CfEnvAwareAppDeploymentRequest.of(appDeploymentRequest);
 		if (this.maxConcurrentExecutionsReached()) {
 			throw new IllegalStateException(
-				String.format("Cannot launch task %s. The maximum concurrent task executions is at its limit [%d].",
-					request.getDefinition().getName(), this.getMaximumConcurrentTasks())
+                    "Cannot launch task %s. The maximum concurrent task executions is at its limit [%d].".formatted(
+                            request.getDefinition().getName(), this.getMaximumConcurrentTasks())
 			);
 		}
 
@@ -103,7 +103,7 @@ public class CloudFoundryTaskLauncher extends AbstractCloudFoundryTaskLauncher {
 			.doOnSuccess(r -> {
 				logger.info("Task {} launch successful", request.getDefinition().getName());
 			})
-			.doOnError(logError(String.format("Task %s launch failed", request.getDefinition().getName())))
+			.doOnError(logError("Task %s launch failed".formatted(request.getDefinition().getName())))
 			.doOnTerminate(() -> {
 				if (pushTaskAppsEnabled()) {
 					deleteLocalApplicationResourceFile(request);
@@ -122,7 +122,7 @@ public class CloudFoundryTaskLauncher extends AbstractCloudFoundryTaskLauncher {
 		requestDeleteApplication(appName)
 			.timeout(Duration.ofSeconds(this.deploymentProperties.getApiTimeout()))
 			.doOnSuccess(v -> logger.info("Successfully destroyed app {}", appName))
-			.doOnError(logError(String.format("Failed to destroy app %s", appName)))
+			.doOnError(logError("Failed to destroy app %s".formatted(appName)))
 			.block(Duration.ofSeconds(this.deploymentProperties.getApiTimeout()));
 	}
 
@@ -151,7 +151,7 @@ public class CloudFoundryTaskLauncher extends AbstractCloudFoundryTaskLauncher {
 	public SummaryApplicationResponse stage(AppDeploymentRequest request) {
 		return getOrDeployApplication(request).doOnSuccess(r ->
 					logger.info("Task {} staged successfully", request.getDefinition().getName()))
-				.doOnError(logError(String.format("Task %s stage failed", request.getDefinition().getName())))
+				.doOnError(logError("Task %s stage failed".formatted(request.getDefinition().getName())))
 				.block(Duration.ofSeconds(this.deploymentProperties.getApiTimeout()));
 	}
 
@@ -211,7 +211,7 @@ public class CloudFoundryTaskLauncher extends AbstractCloudFoundryTaskLauncher {
 					.single()
 					.onErrorMap(t->
 						t instanceof NoSuchElementException ?
-								new IllegalStateException(String.format("Application %s does not exist", name)) : t)
+								new IllegalStateException("Application %s does not exist".formatted(name)) : t)
 					.cast(AbstractApplicationSummary.class);
 		}
 

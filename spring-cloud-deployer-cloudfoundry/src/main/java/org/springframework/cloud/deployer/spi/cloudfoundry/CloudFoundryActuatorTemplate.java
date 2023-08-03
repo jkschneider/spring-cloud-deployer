@@ -46,9 +46,9 @@ public class CloudFoundryActuatorTemplate extends AbstractActuatorTemplate {
 	@Override
 	public Optional<HttpHeaders> httpHeadersForInstance(AppInstanceStatus appInstanceStatus) {
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("X-Cf-App-Instance", String.format("%s:%d", appInstanceStatus.getAttributes()
-				.get(CloudFoundryAppInstanceStatus.CF_GUID),
-				Integer.valueOf(appInstanceStatus.getAttributes().get(CloudFoundryAppInstanceStatus.INDEX))));
+		headers.add("X-Cf-App-Instance", "%s:%d".formatted(appInstanceStatus.getAttributes()
+                        .get(CloudFoundryAppInstanceStatus.CF_GUID),
+                Integer.valueOf(appInstanceStatus.getAttributes().get(CloudFoundryAppInstanceStatus.INDEX))));
 		return Optional.of(headers);
 	}
 }

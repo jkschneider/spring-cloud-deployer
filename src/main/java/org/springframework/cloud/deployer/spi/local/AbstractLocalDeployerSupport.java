@@ -162,8 +162,10 @@ public abstract class AbstractLocalDeployerSupport {
 
 		Map<String, String> appPropertiesToUse = formatApplicationProperties(request, appInstanceEnv);
 		if (logger.isInfoEnabled()) {
-			logger.info("Preparing to run an application from {}. This may take some time if the artifact must be " +
-					"downloaded from a remote host.", request.getResource());
+			logger.info("""
+                    Preparing to run an application from {}. This may take some time if the artifact must be \
+                    downloaded from a remote host.\
+                    """, request.getResource());
 		}
 
 		LocalDeployerProperties localDeployerProperties = bindDeploymentProperties(request.getDeploymentProperties());
@@ -174,7 +176,7 @@ public abstract class AbstractLocalDeployerSupport {
 				.buildExecutionCommand(request, appPropertiesToUse, deploymentId, appInstanceNumber,
 						localDeployerProperties, debugAddressOption);
 
-		logger.info(String.format("Command to be executed: %s", String.join(" ", builder.command())));
+		logger.info("Command to be executed: %s".formatted(String.join(" ", builder.command())));
 		//logger.debug(String.format("Environment Variables to be used : %s", builder.environment().entrySet().stream()
 		//		.map(entry -> entry.getKey() + " : " + entry.getValue()).collect(Collectors.joining(", "))));
 		return builder;

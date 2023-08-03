@@ -60,14 +60,14 @@ public class CloudFoundryAppNameGenerator implements AppNameGenerator, Initializ
 		if (properties.isEnableRandomAppNamePrefix()) {
 			prefixToUse = createUniquePrefix();
 			if (!StringUtils.isEmpty(properties.getAppNamePrefix())) {
-				prefixToUse = String.format("%s-%s", properties.getAppNamePrefix(), prefixToUse);
+				prefixToUse = "%s-%s".formatted(properties.getAppNamePrefix(), prefixToUse);
 			}
 		} else {
 			if (!StringUtils.isEmpty(properties.getAppNamePrefix())) {
 				prefixToUse = properties.getAppNamePrefix();
 			}
 		}
-		logger.info(String.format("Prefix to be used for deploying apps: %s", prefixToUse));
+		logger.info("Prefix to be used for deploying apps: %s".formatted(prefixToUse));
 	}
 
 
@@ -76,7 +76,7 @@ public class CloudFoundryAppNameGenerator implements AppNameGenerator, Initializ
 		if (StringUtils.isEmpty(prefixToUse)) {
 			return appName.substring(0, Math.min(MAX_APPNAME_LENGTH, appName.length()));
 		} else {
-			String string = String.format("%s-%s", prefixToUse, appName);
+			String string = "%s-%s".formatted(prefixToUse, appName);
 			return string.substring(0, Math.min(MAX_APPNAME_LENGTH, string.length()));
 		}
 	}

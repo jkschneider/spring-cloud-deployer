@@ -95,13 +95,13 @@ public class CloudFoundryAppInstanceStatus implements AppInstanceStatus {
 	public Map<String, String> getAttributes() {
 		if (instanceDetail != null) {
 			if (instanceDetail.getCpu() != null) {
-				attributes.put("metrics.machine.cpu", String.format("%.1f%%", instanceDetail.getCpu() * 100d));
+				attributes.put("metrics.machine.cpu", "%.1f%%".formatted(instanceDetail.getCpu() * 100d));
 			}
 			if (instanceDetail.getDiskQuota() != null && instanceDetail.getDiskUsage() != null) {
-				attributes.put("metrics.machine.disk", String.format("%.1f%%", 100d * instanceDetail.getDiskUsage() / instanceDetail.getDiskQuota()));
+				attributes.put("metrics.machine.disk", "%.1f%%".formatted(100d * instanceDetail.getDiskUsage() / instanceDetail.getDiskQuota()));
 			}
 			if (instanceDetail.getMemoryQuota() != null && instanceDetail.getMemoryUsage() != null) {
-				attributes.put("metrics.machine.memory", String.format("%.1f%%", 100d * instanceDetail.getMemoryUsage() / instanceDetail.getMemoryQuota()));
+				attributes.put("metrics.machine.memory", "%.1f%%".formatted(100d * instanceDetail.getMemoryUsage() / instanceDetail.getMemoryQuota()));
 			}
 		}
 		List<String> urls = applicationDetail.getUrls();
@@ -124,6 +124,6 @@ public class CloudFoundryAppInstanceStatus implements AppInstanceStatus {
 
 	@Override
 	public String toString() {
-		return String.format("%s[%s : %s]" , getClass().getSimpleName(), getId(), getState());
+		return "%s[%s : %s]".formatted(getClass().getSimpleName(), getId(), getState());
 	}
 }

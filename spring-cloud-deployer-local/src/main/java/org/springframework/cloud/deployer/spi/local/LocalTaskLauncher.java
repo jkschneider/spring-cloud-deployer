@@ -85,8 +85,8 @@ public class LocalTaskLauncher extends AbstractLocalDeployerSupport implements T
 
 		if (this.maxConcurrentExecutionsReached()) {
 			throw new IllegalStateException(
-				String.format("Cannot launch task %s. The maximum concurrent task executions is at its limit [%d].",
-					request.getDefinition().getName(), this.getMaximumConcurrentTasks())
+                    "Cannot launch task %s. The maximum concurrent task executions is at its limit [%d].".formatted(
+                            request.getDefinition().getName(), this.getMaximumConcurrentTasks())
 			);
 		}
 

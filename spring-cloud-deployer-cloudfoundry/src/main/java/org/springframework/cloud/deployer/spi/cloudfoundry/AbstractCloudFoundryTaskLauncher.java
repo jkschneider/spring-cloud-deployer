@@ -77,7 +77,7 @@ abstract class AbstractCloudFoundryTaskLauncher extends AbstractCloudFoundryDepl
 		requestCancelTask(id)
 				.timeout(Duration.ofSeconds(this.deploymentProperties.getApiTimeout()))
 				.doOnSuccess(r -> logger.info("Task {} cancellation successful", id))
-				.doOnError(logError(String.format("Task %s cancellation failed", id)))
+				.doOnError(logError("Task %s cancellation failed".formatted(id)))
 				.subscribe();
 	}
 
@@ -92,7 +92,7 @@ abstract class AbstractCloudFoundryTaskLauncher extends AbstractCloudFoundryDepl
 		try {
 			return getStatus(id)
 					.doOnSuccess(v -> logger.info("Successfully computed status [{}] for id={}", v, id))
-					.doOnError(logError(String.format("Failed to compute status for %s", id)))
+					.doOnError(logError("Failed to compute status for %s".formatted(id)))
 					.block(Duration.ofMillis(this.deploymentProperties.getStatusTimeout()));
 		}
 		catch (Exception timeoutDueToBlock) {
@@ -116,7 +116,7 @@ abstract class AbstractCloudFoundryTaskLauncher extends AbstractCloudFoundryDepl
 		return listTasksRequest.flatMap(request-> this.client.tasks().list(request))
 				.map(listTasksResponse -> listTasksResponse.getPagination().getTotalResults())
 				.doOnError(logError("Failed to list running tasks"))
-				.doOnSuccess(count -> logger.info(String.format("There are %d running tasks", count)))
+				.doOnSuccess(count -> logger.info("There are %d running tasks".formatted(count)))
 				.block(Duration.ofMillis(this.deploymentProperties.getStatusTimeout()));
 	}
 
@@ -157,7 +157,7 @@ abstract class AbstractCloudFoundryTaskLauncher extends AbstractCloudFoundryDepl
 		case FAILED:
 			return new TaskStatus(response.getId(), LaunchState.failed, null);
 		default:
-			throw new IllegalStateException(String.format("Unsupported CF task state %s", response.getState()));
+			throw new IllegalStateException("Unsupported CF task state %s".formatted(response.getState()));
 		}
 	}
 

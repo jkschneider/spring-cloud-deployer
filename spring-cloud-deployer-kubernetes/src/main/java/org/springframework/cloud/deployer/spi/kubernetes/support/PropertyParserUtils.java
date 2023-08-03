@@ -48,7 +48,7 @@ public class PropertyParserUtils {
 			String[] pairs = stringPairs.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 			for (String pair : pairs) {
 				String[] splitString = pair.split(":", 2);
-				Assert.isTrue(splitString.length == 2, String.format("Invalid annotation value: %s", pair));
+				Assert.isTrue(splitString.length == 2, "Invalid annotation value: %s".formatted(pair));
 				String value = splitString[1].trim();
 				mapValue.put(splitString[0].trim(), value);
 			}

@@ -384,8 +384,10 @@ public class LocalDeployerProperties {
 	}
 
 	public void setDebugPort(Integer debugPort) {
-		logger.warn("The debugPort is deprecated! It supports only pre Java 9 environments. " +
-				"Please use the debugAddress property instead!");
+		logger.warn("""
+                The debugPort is deprecated! It supports only pre Java 9 environments. \
+                Please use the debugAddress property instead!\
+                """);
 		this.debugPort = debugPort;
 	}
 

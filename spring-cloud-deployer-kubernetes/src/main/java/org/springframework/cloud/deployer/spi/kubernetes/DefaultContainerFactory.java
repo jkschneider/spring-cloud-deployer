@@ -105,7 +105,7 @@ public class DefaultContainerFactory implements ContainerFactory {
             case exec:
                 appArgs = createCommandArgs(request);
                 List<String> finalAppArgs = appArgs;
-                appAdminCredentials.forEach((k, v) -> finalAppArgs.add(String.format("--%s=%s", k, v)));
+                appAdminCredentials.forEach((k, v) -> finalAppArgs.add("--%s=%s".formatted(k, v)));
 
 
                 break;
@@ -317,11 +317,10 @@ public class DefaultContainerFactory implements ContainerFactory {
                         "Excluding request property with missing value from command args: " + entry.getKey());
             } else if (commandArgOptions.contains(entry.getKey())) {
                 logger.warn(
-                        String.format(
-                                "Excluding request property [--%s=%s] as a command arg. Existing command line argument takes precedence."
-                                , entry.getKey(), entry.getValue()));
+                        
+                        "Excluding request property [--%s=%s] as a command arg. Existing command line argument takes precedence.".formatted(entry.getKey(), entry.getValue()));
             } else {
-                cmdArgs.add(String.format("--%s=%s", entry.getKey(), entry.getValue()));
+                cmdArgs.add("--%s=%s".formatted(entry.getKey(), entry.getValue()));
             }
         }
         // add provided command line args
@@ -337,9 +336,9 @@ public class DefaultContainerFactory implements ContainerFactory {
     }
 
     private DeploymentPropertiesResolver getDeploymentPropertiesResolver(AppDeploymentRequest request) {
-        String propertiesPrefix = (request instanceof ScheduleRequest &&
-                ((ScheduleRequest) request).getSchedulerProperties() != null &&
-                ((ScheduleRequest) request).getSchedulerProperties().size() > 0) ? KubernetesSchedulerProperties.KUBERNETES_SCHEDULER_PROPERTIES_PREFIX :
+        String propertiesPrefix = (request instanceof ScheduleRequest sr &&
+                sr.getSchedulerProperties() != null &&
+                sr.getSchedulerProperties().size() > 0) ? KubernetesSchedulerProperties.KUBERNETES_SCHEDULER_PROPERTIES_PREFIX :
                 KubernetesDeployerProperties.KUBERNETES_DEPLOYER_PROPERTIES_PREFIX;
         return new DeploymentPropertiesResolver(propertiesPrefix, this.properties);
     }

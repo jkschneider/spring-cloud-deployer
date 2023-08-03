@@ -128,7 +128,7 @@ public class LocalAppDeployer extends AbstractLocalDeployerSupport implements Ap
 	@Override
 	public String deploy(AppDeploymentRequest request) {
 		String group = request.getDeploymentProperties().get(GROUP_PROPERTY_KEY);
-		String deploymentId = String.format("%s.%s", group, request.getDefinition().getName());
+		String deploymentId = "%s.%s".formatted(group, request.getDefinition().getName());
 		validateStatus(deploymentId, DeploymentState.unknown);
 		List<AppInstance> processes = new ArrayList<>();
 		running.put(deploymentId, new AppInstancesHolder(processes, request));
@@ -161,7 +161,7 @@ public class LocalAppDeployer extends AbstractLocalDeployerSupport implements Ap
 		AppDeploymentRequest request = holder.request;
 
 		String group = request.getDeploymentProperties().get(GROUP_PROPERTY_KEY);
-		String deploymentId = String.format("%s.%s", group, request.getDefinition().getName());
+		String deploymentId = "%s.%s".formatted(group, request.getDefinition().getName());
 
 		try {
 			Path workDir = createWorkingDir(request.getDeploymentProperties(), deploymentId);
@@ -206,7 +206,7 @@ public class LocalAppDeployer extends AbstractLocalDeployerSupport implements Ap
 			running.remove(id);
 		}
 		else {
-			throw new IllegalStateException(String.format("App with deploymentId %s is not in a deployed state.", id));
+			throw new IllegalStateException("App with deploymentId %s is not in a deployed state.".formatted(id));
 		}
 	}
 
@@ -349,12 +349,12 @@ public class LocalAppDeployer extends AbstractLocalDeployerSupport implements Ap
 	private void validateStatus(String deploymentId, DeploymentState expectedState) {
 		DeploymentState state = status(deploymentId).getState();
 		Assert.state(state == expectedState,
-				String.format("App with deploymentId [%s] with state [%s] doesn't match expected state [%s]",
-						deploymentId, state, expectedState));
+                "App with deploymentId [%s] with state [%s] doesn't match expected state [%s]".formatted(
+                        deploymentId, state, expectedState));
 	}
 
 	private static String toGuid(String deploymentId, int appIndex) {
-		return String.format("%s-%s", deploymentId, appIndex);
+		return "%s-%s".formatted(deploymentId, appIndex);
 	}
 
 	private static class AppInstance implements Instance, AppInstanceStatus {
@@ -405,7 +405,7 @@ public class LocalAppDeployer extends AbstractLocalDeployerSupport implements Ap
 
 		@Override
 		public String toString() {
-			return String.format("%s [%s]", getId(), getState());
+			return "%s [%s]".formatted(getId(), getState());
 		}
 
 		@Override

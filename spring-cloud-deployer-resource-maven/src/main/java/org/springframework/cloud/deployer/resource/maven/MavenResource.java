@@ -177,8 +177,8 @@ public class MavenResource extends AbstractResource {
 	@Override
 	public String getFilename() {
 		return StringUtils.hasLength(classifier) ?
-				String.format("%s-%s-%s.%s", artifactId, version, classifier, extension) :
-				String.format("%s-%s.%s", artifactId, version, extension);
+                "%s-%s-%s.%s".formatted(artifactId, version, classifier, extension) :
+                "%s-%s.%s".formatted(artifactId, version, extension);
 	}
 
 	@Override
@@ -228,8 +228,8 @@ public class MavenResource extends AbstractResource {
 	@Override
 	public String toString() {
 		return StringUtils.hasLength(classifier) ?
-				String.format("%s:%s:%s:%s:%s", groupId, artifactId, extension, classifier, version) :
-				String.format("%s:%s:%s:%s", groupId, artifactId, extension, version);
+                "%s:%s:%s:%s:%s".formatted(groupId, artifactId, extension, classifier, version) :
+                "%s:%s:%s:%s".formatted(groupId, artifactId, extension, version);
 	}
 
 	@Override

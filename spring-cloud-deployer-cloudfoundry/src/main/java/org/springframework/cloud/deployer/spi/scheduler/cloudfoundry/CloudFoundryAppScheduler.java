@@ -131,13 +131,15 @@ public class CloudFoundryAppScheduler implements Scheduler {
 	public void schedule(ScheduleRequest scheduleRequest) {
 		String appName = scheduleRequest.getDefinition().getName();
 		String scheduleName = scheduleRequest.getScheduleName();
-		logger.debug(String.format("Scheduling: %s", scheduleName));
+		logger.debug("Scheduling: %s".formatted(scheduleName));
 
 		if (scheduleName.length() > MAX_SCHEDULE_NAME_LENGTH) {
-			throw new CreateScheduleException(String.format("Schedule can not be created because its name " +
-							"'%s' has too many characters.  Schedule name length" +
-							" must be %s characters or less.",
-					scheduleName, MAX_SCHEDULE_NAME_LENGTH), null);
+			throw new CreateScheduleException(("""
+                    Schedule can not be created because its name \
+                    '%s' has too many characters.  Schedule name length\
+                     must be %s characters or less.\
+                    """).formatted(
+                    scheduleName, MAX_SCHEDULE_NAME_LENGTH), null);
 		}
 
 		String cronExpressionCandidate = null;
@@ -153,9 +155,9 @@ public class CloudFoundryAppScheduler implements Scheduler {
 		else if (scheduleRequest.getDeploymentProperties().get(CRON_EXPRESSION_KEY) != null) {
 			cronExpressionCandidate = scheduleRequest.getDeploymentProperties().get(CRON_EXPRESSION_KEY);
 		}
-		Assert.hasText(cronExpressionCandidate, String.format(
-				"request's scheduleProperties must have a %s or %s that is not null nor empty",
-				SchedulerPropertyKeys.CRON_EXPRESSION, CRON_EXPRESSION_KEY));
+		Assert.hasText(cronExpressionCandidate, 
+                "request's scheduleProperties must have a %s or %s that is not null nor empty".formatted(
+                        SchedulerPropertyKeys.CRON_EXPRESSION, CRON_EXPRESSION_KEY));
 		String cronExpression = cronExpressionCandidate;
 		try {
 			new QuartzCronExpression("0 " + cronExpression);
@@ -193,7 +195,7 @@ public class CloudFoundryAppScheduler implements Scheduler {
 
 	@Override
 	public void unschedule(String scheduleName) {
-		logger.debug(String.format("Unscheduling: %s", scheduleName));
+		logger.debug("Unscheduling: %s".formatted(scheduleName));
 		this.client.jobs().delete(DeleteJobRequest.builder()
 				.jobId(getJob(scheduleName))
 				.build())
@@ -231,7 +233,7 @@ public class CloudFoundryAppScheduler implements Scheduler {
 	 */
 	private void scheduleTask(String appName, String scheduleName,
 			String expression, String command) {
-		logger.debug(String.format("Scheduling Task: ", appName));
+		logger.debug("Scheduling Task: ".formatted(appName));
 
 		ScheduleJobResponse response = getApplicationByAppName(appName)
 				.flatMap(abstractApplicationSummary -> {
@@ -269,8 +271,8 @@ public class CloudFoundryAppScheduler implements Scheduler {
 	 * @return the command string for the scheduled task.
 	 */
 	private String stageTask(ScheduleRequest scheduleRequest) {
-		logger.debug(String.format("Staging Task: ",
-				scheduleRequest.getDefinition().getName()));
+		logger.debug("Staging Task: ".formatted(
+                scheduleRequest.getDefinition().getName()));
 		AppDeploymentRequest request = new AppDeploymentRequest(
 				scheduleRequest.getDefinition(),
 				scheduleRequest.getResource(),
@@ -371,7 +373,7 @@ public class CloudFoundryAppScheduler implements Scheduler {
 											job.getJobSchedules().get(0).getExpression());
 								}
 								else {
-									logger.warn(String.format("Job %s does not have an associated schedule", job.getName()));
+									logger.warn("Job %s does not have an associated schedule".formatted(job.getName()));
 								}
 								return scheduleInfo;
 							});
@@ -429,7 +431,7 @@ public class CloudFoundryAppScheduler implements Scheduler {
 			}
 		}
 		if(result == null) {
-			throw new UnScheduleException(String.format("schedule %s does not exist.", jobName));
+			throw new UnScheduleException("schedule %s does not exist.".formatted(jobName));
 		}
 		return result.getId();
 	}

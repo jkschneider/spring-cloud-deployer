@@ -113,8 +113,8 @@ public class KubernetesTaskLauncher extends AbstractKubernetesDeployer implement
 
 		if (this.maxConcurrentExecutionsReached()) {
 			throw new IllegalStateException(
-				String.format("Cannot launch task %s. The maximum concurrent task executions is at its limit [%d].",
-					request.getDefinition().getName(), this.getMaximumConcurrentTasks())
+                    "Cannot launch task %s. The maximum concurrent task executions is at its limit [%d].".formatted(
+                            request.getDefinition().getName(), this.getMaximumConcurrentTasks())
 			);
 		}
 
@@ -130,7 +130,7 @@ public class KubernetesTaskLauncher extends AbstractKubernetesDeployer implement
 
 	@Override
 	public void cancel(String id) {
-		logger.debug(String.format("Cancelling task: %s", id));
+		logger.debug("Cancelling task: %s".formatted(id));
 		//ToDo: what does cancel mean? Kubernetes doesn't have stop - just cleanup
 		cleanup(id);
 	}
@@ -164,7 +164,7 @@ public class KubernetesTaskLauncher extends AbstractKubernetesDeployer implement
 	@Override
 	public TaskStatus status(String id) {
 		TaskStatus status = buildTaskStatus(id);
-		logger.debug(String.format("Status for task: %s is %s", id, status));
+		logger.debug("Status for task: %s is %s".formatted(id, status));
 
 		return status;
 	}
@@ -242,13 +242,13 @@ public class KubernetesTaskLauncher extends AbstractKubernetesDeployer implement
 		Map<String, String> deploymentProperties = request.getDeploymentProperties();
 		Map<String, String> deploymentLabels = this.deploymentPropertiesResolver.getDeploymentLabels(deploymentProperties);
 		if (!CollectionUtils.isEmpty(deploymentLabels)) {
-			logger.debug(String.format("Adding deploymentLabels: %s", deploymentLabels));
+			logger.debug("Adding deploymentLabels: %s".formatted(deploymentLabels));
 		}
 		PodSpec podSpec = createPodSpec(request);
 
 		podSpec.setRestartPolicy(getRestartPolicy(request).name());
 		if (this.properties.isCreateJob()) {
-			logger.debug(String.format("Launching Job for task: %s", appId));
+			logger.debug("Launching Job for task: %s".formatted(appId));
 			ObjectMeta objectMeta = new ObjectMetaBuilder()
 					.withLabels(podLabelMap)
 					.addToLabels(idMap)
@@ -277,7 +277,7 @@ public class KubernetesTaskLauncher extends AbstractKubernetesDeployer implement
 			);
 		}
 		else {
-			logger.debug(String.format("Launching Pod for task: %s", appId));
+			logger.debug("Launching Pod for task: %s".formatted(appId));
 
 			this.client.pods().create(
 					new PodBuilder()
@@ -305,7 +305,7 @@ public class KubernetesTaskLauncher extends AbstractKubernetesDeployer implement
 			}
 		}
 		catch (KubernetesClientException kce) {
-			logger.warn(String.format("Failed to retrieve pods for task: %s", taskName), kce);
+			logger.warn("Failed to retrieve pods for task: %s".formatted(taskName), kce);
 		}
 
 		return ids;
@@ -392,12 +392,12 @@ public class KubernetesTaskLauncher extends AbstractKubernetesDeployer implement
 				.withLabel(SPRING_APP_KEY, id);
 
 		if (jobsToDelete == null || ObjectUtils.isEmpty(jobsToDelete.list().getItems())) {
-			logger.warn(String.format("Cannot delete job for task \"%s\" (reason: job does not exist)", id));
+			logger.warn("Cannot delete job for task \"%s\" (reason: job does not exist)".formatted(id));
 		}
 
-		logger.debug(String.format("Deleting job for task: %s", id));
+		logger.debug("Deleting job for task: %s".formatted(id));
 		boolean deleted = jobsToDelete.delete();
-		logger.debug(String.format("Job was%s deleted for task: %s", id, (deleted ? "" : " not")));
+		logger.debug("Job was%s deleted for task: %s".formatted(id, (deleted ? "" : " not")));
 	}
 
 	private void deletePod(String id) {
@@ -405,12 +405,12 @@ public class KubernetesTaskLauncher extends AbstractKubernetesDeployer implement
 				.withLabel(SPRING_APP_KEY, id);
 
 		if (podsToDelete == null || ObjectUtils.isEmpty(podsToDelete.list().getItems())) {
-			logger.warn(String.format("Cannot delete pod for task \"%s\" (reason: pod does not exist)", id));
+			logger.warn("Cannot delete pod for task \"%s\" (reason: pod does not exist)".formatted(id));
 		}
 
-		logger.debug(String.format("Deleting pod for task: %s", id));
+		logger.debug("Deleting pod for task: %s".formatted(id));
 		boolean deleted = podsToDelete.delete();
-		logger.debug(String.format("Pod was%s deleted for task: %s", id, (deleted ? "" : " not")));
+		logger.debug("Pod was%s deleted for task: %s".formatted(id, (deleted ? "" : " not")));
 	}
 
 	private Job getJob(String jobName) {

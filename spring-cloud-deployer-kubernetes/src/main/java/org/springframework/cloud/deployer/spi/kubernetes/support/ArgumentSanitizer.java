@@ -83,7 +83,7 @@ public class ArgumentSanitizer {
 
 		value = sanitize(key, value);
 
-		return String.format("%s=%s", key, value);
+		return "%s=%s".formatted(key, value);
 	}
 
 	/**

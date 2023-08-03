@@ -48,13 +48,13 @@ public class EventuallyMatcher<U> extends DiagnosingMatcher<U> {
 
 	@Override
 	public void describeTo(Description description) {
-		description.appendDescriptionOf(delegate).appendText(String.format(", trying at most %d times", maxAttempts));
+		description.appendDescriptionOf(delegate).appendText(", trying at most %d times".formatted(maxAttempts));
 	}
 
 	@Override
 	protected boolean matches(Object item, Description mismatchDescription) {
 		mismatchDescription.appendText(
-				String.format("failed after %d*%d=%dms:%n", maxAttempts, pause, maxAttempts * pause));
+                "failed after %d*%d=%dms:%n".formatted(maxAttempts, pause, maxAttempts * pause));
 		for (int i = 0; i < maxAttempts; i++) {
 			boolean result = delegate.matches(item);
 			if (result) {

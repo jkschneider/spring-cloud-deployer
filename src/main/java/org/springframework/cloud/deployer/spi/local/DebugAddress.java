@@ -48,7 +48,7 @@ public class DebugAddress {
 		this.host = host;
 		this.port = "" + port;
 		this.suspend = (StringUtils.hasText(suspend)) ? suspend.trim() : "y";
-		this.address = (StringUtils.hasText(host)) ? String.format("%s:%s", host, port) : this.port;
+		this.address = (StringUtils.hasText(host)) ? "%s:%s".formatted(host, port) : this.port;
 	}
 
 	public String getHost() {

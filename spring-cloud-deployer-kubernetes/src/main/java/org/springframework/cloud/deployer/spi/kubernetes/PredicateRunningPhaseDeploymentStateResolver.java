@@ -122,14 +122,18 @@ public class PredicateRunningPhaseDeploymentStateResolver implements RunningPhas
 	static class RestartsDueToTheSameError extends PredicateRunningPhaseDeploymentStateResolver {
 
 		RestartsDueToTheSameError(KubernetesDeployerProperties properties) {
-			super(properties, DeploymentState.failed, new ContainerStatusCondition("restart count > "
-				+ "maxTerminatedErrorRestarts") {
+			super(properties, DeploymentState.failed, new ContainerStatusCondition("""
+                restart count > \
+                maxTerminatedErrorRestarts\
+                """) {
 				@Override
 				public boolean test(ContainerStatus containerStatus) {
 					return containerStatus.getRestartCount() > properties.getMaxTerminatedErrorRestarts();
 				}
-			}, new ContainerStatusCondition("last state termination reason == 'Error' and termination reason == "
-				+ "'Error'") {
+			}, new ContainerStatusCondition("""
+                last state termination reason == 'Error' and termination reason == \
+                'Error'\
+                """) {
 				public boolean test(ContainerStatus containerStatus) {
 					return
 						containerStatus.getLastState() != null && containerStatus.getState() != null &&
@@ -152,8 +156,10 @@ public class PredicateRunningPhaseDeploymentStateResolver implements RunningPhas
 
 	static class CrashLoopBackOffRestarts extends PredicateRunningPhaseDeploymentStateResolver {
 		CrashLoopBackOffRestarts(KubernetesDeployerProperties properties) {
-			super(properties, DeploymentState.failed, new ContainerStatusCondition("restart count > "
-				+ "CrashLoopBackOffRestarts") {
+			super(properties, DeploymentState.failed, new ContainerStatusCondition("""
+                restart count > \
+                CrashLoopBackOffRestarts\
+                """) {
 				@Override
 				public boolean test(ContainerStatus containerStatus) {
 					return containerStatus.getRestartCount() > properties.getMaxCrashLoopBackOffRestarts();

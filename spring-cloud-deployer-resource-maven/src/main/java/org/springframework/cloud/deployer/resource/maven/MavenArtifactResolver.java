@@ -354,13 +354,13 @@ class MavenArtifactResolver {
 	}
 
 	private String actualRemoteRepositoriesDescription() {
-		return this.remoteRepositories.stream().map((repo) -> String.format("%s (%s)", repo.getId(), repo.getUrl()))
+		return this.remoteRepositories.stream().map((repo) -> "%s (%s)".formatted(repo.getId(), repo.getUrl()))
 				.collect(Collectors.joining(", ", "[", "]"));
 	}
 
 	private String configuredRemoteRepositoriesDescription() {
 		return this.properties.getRemoteRepositories().entrySet().stream()
-				.map((e) -> String.format("%s (%s)", e.getKey(), e.getValue().getUrl()))
+				.map((e) -> "%s (%s)".formatted(e.getKey(), e.getValue().getUrl()))
 				.collect(Collectors.joining(", ", "[", "]"));
 	}
 
@@ -405,8 +405,8 @@ class MavenArtifactResolver {
 			return toResource(results.get(results.size() - 1));
 		}
 		catch (ArtifactResolutionException ex) {
-			String errorMsg = String.format("Failed to resolve %s using remote repo(s): %s",
-					resource, actualRemoteRepositoriesDescription());
+			String errorMsg = "Failed to resolve %s using remote repo(s): %s".formatted(
+                    resource, actualRemoteRepositoriesDescription());
 			throw new IllegalStateException(errorMsg, ex);
 		}
 	}

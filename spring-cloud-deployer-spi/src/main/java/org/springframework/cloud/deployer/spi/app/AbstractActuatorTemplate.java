@@ -66,7 +66,7 @@ public abstract class AbstractActuatorTemplate implements ActuatorOperations {
 
 		AppInstanceStatus appInstanceStatus = getDeployedInstance(deploymentId, guid)
 				.orElseThrow(() -> new IllegalStateException(
-						String.format("App with deploymentId %s and guid %s not deployed", deploymentId, guid)));
+                "App with deploymentId %s and guid %s not deployed".formatted(deploymentId, guid)));
 
 		String actuatorUrl = getActuatorUrl(appInstanceStatus);
 
@@ -85,7 +85,7 @@ public abstract class AbstractActuatorTemplate implements ActuatorOperations {
 			Class<R> responseType, Optional<HttpHeaders> optionalRequestHeaders) {
 		AppInstanceStatus appInstanceStatus = getDeployedInstance(deploymentId, guid)
 				.orElseThrow(() -> new IllegalStateException(
-						String.format("App with deploymentId %s and guid %s not deployed", deploymentId, guid)));
+                "App with deploymentId %s and guid %s not deployed".formatted(deploymentId, guid)));
 
 		String actuatorUrl = getActuatorUrl(appInstanceStatus);
 
@@ -104,9 +104,9 @@ public abstract class AbstractActuatorTemplate implements ActuatorOperations {
 		try {
 			return actuatorUrlForInstance(appInstanceStatus);
 		} catch (Exception e) {
-			throw new IllegalArgumentException(String.format(
-					"Unable to determine actuator url for app with guid %s",
-					appInstanceStatus.getAttributes().get("guid")));
+			throw new IllegalArgumentException(
+                    "Unable to determine actuator url for app with guid %s".formatted(
+                            appInstanceStatus.getAttributes().get("guid")));
 		}
 	}
 
@@ -163,8 +163,8 @@ public abstract class AbstractActuatorTemplate implements ActuatorOperations {
 			return Optional.empty();
 		}
 		else if (count > 1) {
-			throw new IllegalStateException(String.format(
-					"guid %s is not unique for instances of deploymentId %s", guid, deploymentId));
+			throw new IllegalStateException(
+                    "guid %s is not unique for instances of deploymentId %s".formatted(guid, deploymentId));
 		}
 
 		return appStatus.getInstances().values().stream()
@@ -179,7 +179,7 @@ public abstract class AbstractActuatorTemplate implements ActuatorOperations {
 			Optional.of(HttpHeaders.encodeBasicAuth(appAdmin.getUser(), appAdmin.getPassword(),
 					Charset.defaultCharset())) : Optional.empty();
 
-		if (!encodeBasicAuth.isPresent()) {
+		if (encodeBasicAuth.isEmpty()) {
 			logger.warn("No app admin credentials have been configured for " + this.getClass().getName());
 		}
 		return encodeBasicAuth;

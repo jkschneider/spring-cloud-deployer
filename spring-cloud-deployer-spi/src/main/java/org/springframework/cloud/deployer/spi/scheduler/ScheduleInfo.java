@@ -83,8 +83,10 @@ public class ScheduleInfo {
 
 	@Override
 	public String toString() {
-		return "ScheduleInfo{" +
-				"scheduleName='" + scheduleName + '\'' +
+		return """
+                ScheduleInfo{\
+                scheduleName='\
+                """ + scheduleName + '\'' +
 				", taskDefinitionName='" + taskDefinitionName + '\'' +
 				", scheduleProperties=" + scheduleProperties +
 				'}';

@@ -286,7 +286,7 @@ public class KubernetesSchedulerIT extends AbstractSchedulerIntegrationJUnit5Tes
 		assertThatThrownBy(() -> {
 			scheduler.schedule(scheduleRequest2);
 		}).isInstanceOf(CreateScheduleException.class)
-				.hasMessage(String.format("Failed to create schedule because Schedule Name: '%s' has too many characters.  Schedule name length must be 52 characters or less", baseScheduleName + "1"));
+				.hasMessage("Failed to create schedule because Schedule Name: '%s' has too many characters.  Schedule name length must be 52 characters or less".formatted(baseScheduleName + "1"));
 	}
 
 	@ParameterizedTest

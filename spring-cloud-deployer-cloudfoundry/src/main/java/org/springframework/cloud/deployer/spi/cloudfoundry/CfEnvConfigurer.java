@@ -118,7 +118,7 @@ class CfEnvConfigurer {
 
 	private static String appendToValueIfPresent(String current, String value) {
 		if (StringUtils.hasText(current)) {
-			if (!Stream.of(current.split(",")).filter(s -> s.trim().equals(value)).findFirst().isPresent()) {
+			if (Stream.of(current.split(",")).filter(s -> s.trim().equals(value)).findFirst().isEmpty()) {
 				return current.join(",", current, value);
 			}
 			return current;

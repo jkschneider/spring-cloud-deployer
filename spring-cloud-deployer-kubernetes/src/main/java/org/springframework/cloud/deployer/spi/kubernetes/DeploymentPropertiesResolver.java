@@ -370,7 +370,7 @@ class DeploymentPropertiesResolver {
 			String[] nodeSelectorPairs = nodeSelector.split(",");
 			for (String nodeSelectorPair : nodeSelectorPairs) {
 				String[] selector = nodeSelectorPair.split(":");
-				Assert.isTrue(selector.length == 2, String.format("Invalid nodeSelector value: '%s'", nodeSelectorPair));
+				Assert.isTrue(selector.length == 2, "Invalid nodeSelector value: '%s'".formatted(nodeSelectorPair));
 				nodeSelectors.put(selector[0].trim(), selector[1].trim());
 			}
 		}
@@ -708,7 +708,7 @@ class DeploymentPropertiesResolver {
 			for (String label : deploymentLabel) {
 				String[] labelPair = label.split(":");
 				Assert.isTrue(labelPair.length == 2,
-						String.format("Invalid label format, expected 'labelKey:labelValue', got: '%s'", labelPair));
+                        "Invalid label format, expected 'labelKey:labelValue', got: '%s'".formatted(labelPair));
 				labels.put(labelPair[0].trim(), labelPair[1].trim());
 			}
 		}
@@ -761,7 +761,7 @@ class DeploymentPropertiesResolver {
 						.bind("", Bindable.of(KubernetesDeployerProperties.class)).get();
 			} catch (Exception e) {
 				throw new IllegalArgumentException(
-						String.format("Invalid binding property '%s'", deploymentPropertyValue), e);
+                        "Invalid binding property '%s'".formatted(deploymentPropertyValue), e);
 			}
 		}
 
@@ -849,7 +849,7 @@ class DeploymentPropertiesResolver {
 				volumeMounts.addAll(deployerProperties.getVolumeMounts());
 			} catch (Exception e) {
 				throw new IllegalArgumentException(
-						String.format("Invalid volume mount '%s'", propertyValue), e);
+                        "Invalid volume mount '%s'".formatted(propertyValue), e);
 			}
 		}
 

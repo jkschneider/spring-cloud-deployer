@@ -34,8 +34,8 @@ public class KubernetesActuatorTemplate extends AbstractActuatorTemplate {
 	}
 
 	protected String actuatorUrlForInstance(AppInstanceStatus appInstanceStatus) {
-		return String.format("http://%s:%d/%s", appInstanceStatus.getAttributes().get("pod.ip"),
-					Integer.valueOf(appInstanceStatus.getAttributes().get("actuator.port")),
-							appInstanceStatus.getAttributes().get("actuator.path"));
+		return "http://%s:%d/%s".formatted(appInstanceStatus.getAttributes().get("pod.ip"),
+                Integer.valueOf(appInstanceStatus.getAttributes().get("actuator.port")),
+                appInstanceStatus.getAttributes().get("actuator.path"));
 	}
 }

@@ -24,10 +24,10 @@ package org.springframework.cloud.deployer.spi.scheduler;
  */
 public class UnScheduleException extends SchedulerException {
 	public UnScheduleException(String scheduleName) {
-		super(String.format("Failed to unschedule %s", scheduleName));
+		super("Failed to unschedule %s".formatted(scheduleName));
 	}
 
 	public UnScheduleException(String scheduleName, Throwable t) {
-		super(String.format("Failed to unschedule %s", scheduleName), t);
+		super("Failed to unschedule %s".formatted(scheduleName), t);
 	}
 }

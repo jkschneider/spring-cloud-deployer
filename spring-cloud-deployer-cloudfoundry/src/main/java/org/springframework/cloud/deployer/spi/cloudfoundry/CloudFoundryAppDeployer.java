@@ -117,7 +117,7 @@ public class CloudFoundryAppDeployer extends AbstractCloudFoundryDeployer implem
 					logger.warn("Unable to deploy application. It may have been destroyed before start completed: " + error.getMessage());
 				}
 				else {
-					logError(String.format("Failed to deploy %s", deploymentId)).accept(error);
+					logError("Failed to deploy %s".formatted(deploymentId)).accept(error);
 				}
 			})
 			.doOnSuccessOrError((r, e) -> {
@@ -184,7 +184,7 @@ public class CloudFoundryAppDeployer extends AbstractCloudFoundryDeployer implem
 		try {
 			return getStatus(id)
 				.doOnSuccess(v -> logger.info("Successfully computed status [{}] for {}", v, id))
-				.doOnError(logError(String.format("Failed to compute status for %s", id)))
+				.doOnError(logError("Failed to compute status for %s".formatted(id)))
 				.block(Duration.ofMillis(this.deploymentProperties.getStatusTimeout()));
 		}
 		catch (Exception timeoutDueToBlock) {
@@ -207,7 +207,7 @@ public class CloudFoundryAppDeployer extends AbstractCloudFoundryDeployer implem
 		requestDeleteApplication(id)
 			.timeout(Duration.ofSeconds(this.deploymentProperties.getApiTimeout()))
 			.doOnSuccess(v -> logger.info("Successfully undeployed app {}", id))
-			.doOnError(logError(String.format("Failed to undeploy app %s", id)))
+			.doOnError(logError("Failed to undeploy app %s".formatted(id)))
 			.subscribe();
 	}
 
@@ -249,14 +249,14 @@ public class CloudFoundryAppDeployer extends AbstractCloudFoundryDeployer implem
 	private void assertApplicationDoesNotExist(String deploymentId, AppStatus status) {
 		DeploymentState state = status.getState();
 		if (state != DeploymentState.unknown && state != DeploymentState.error) {
-			throw new IllegalStateException(String.format("App %s is already deployed with state %s", deploymentId, state));
+			throw new IllegalStateException("App %s is already deployed with state %s".formatted(deploymentId, state));
 		}
 	}
 
 	private void assertApplicationExists(String deploymentId, AppStatus status) {
 		DeploymentState state = status.getState();
 		if (state == DeploymentState.unknown) {
-			throw new IllegalStateException(String.format("App %s is not in a deployed state", deploymentId));
+			throw new IllegalStateException("App %s is not in a deployed state".formatted(deploymentId));
 		}
 	}
 
@@ -290,10 +290,10 @@ public class CloudFoundryAppDeployer extends AbstractCloudFoundryDeployer implem
 
 	private String deploymentId(AppDeploymentRequest request) {
 		String prefix = Optional.ofNullable(request.getDeploymentProperties().get(GROUP_PROPERTY_KEY))
-			.map(group -> String.format("%s-", group))
+			.map(group -> "%s-".formatted(group))
 			.orElse("");
 
-		String appName = String.format("%s%s", prefix, request.getDefinition().getName());
+		String appName = "%s%s".formatted(prefix, request.getDefinition().getName());
 
 		return this.applicationNameGenerator.generateAppName(appName);
 	}
@@ -405,8 +405,7 @@ public class CloudFoundryAppDeployer extends AbstractCloudFoundryDeployer implem
 		// defer so that new reques gets created when retry does re-sub
 		return Mono.defer(() -> this.operations.services().bind(bindRequest))
 			.doOnError(e -> {
-				if (e instanceof ClientV2Exception) {
-					ClientV2Exception ce = (ClientV2Exception) e;
+				if (e instanceof ClientV2Exception ce) {
 					if (ce.getCode() == 10001) {
 						logger.warn("Retry service bind due to concurrency error");
 					}
@@ -447,7 +446,7 @@ public class CloudFoundryAppDeployer extends AbstractCloudFoundryDeployer implem
 			.noStart(true)
 			.build())
 			.doOnSuccess(v -> logger.info("Done uploading bits for {}", deploymentId))
-			.doOnError(e -> logger.error(String.format("Error creating app %s.  Exception Message %s", deploymentId, e.getMessage())))
+			.doOnError(e -> logger.error("Error creating app %s.  Exception Message %s".formatted(deploymentId, e.getMessage())))
 
 			.thenMany(Flux.fromStream(bindParameterizedServiceInstanceRequests(request, deploymentId)))
 			.flatMap(bindRequest -> this.requestBind(bindRequest)
@@ -463,7 +462,7 @@ public class CloudFoundryAppDeployer extends AbstractCloudFoundryDeployer implem
 				.doOnSuccess(sv -> logger.info("Started app for {} ", deploymentId))
 				.doOnError(e -> logger.error("Error: {} starting app for {}.", e.getMessage(), deploymentId)))
 
-			.doOnError(e -> logger.error(String.format("Error: %s creating app %s", e.getMessage(), deploymentId), e));
+			.doOnError(e -> logger.error("Error: %s creating app %s".formatted(e.getMessage(), deploymentId), e));
 	}
 
 	private Mono<Void> requestDeleteApplication(String id) {
@@ -535,8 +534,8 @@ public class CloudFoundryAppDeployer extends AbstractCloudFoundryDeployer implem
 		try {
 			return ApplicationHealthCheck.from(raw);
 		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException(String.format("Unsupported health-check value '%s'. Available values are %s", raw,
-				StringUtils.arrayToCommaDelimitedString(ApplicationHealthCheck.values())), e);
+			throw new IllegalArgumentException("Unsupported health-check value '%s'. Available values are %s".formatted(raw,
+                    StringUtils.arrayToCommaDelimitedString(ApplicationHealthCheck.values())), e);
 		}
 	}
 

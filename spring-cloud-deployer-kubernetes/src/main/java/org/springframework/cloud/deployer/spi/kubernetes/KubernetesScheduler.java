@@ -148,7 +148,7 @@ public class KubernetesScheduler extends AbstractKubernetesDeployer implements S
 			throw new CreateScheduleException("The name for the schedule request is null", null);
 		}
 		if(request.getScheduleName().length() > 52) {
-			throw new CreateScheduleException(String.format("because Schedule Name: '%s' has too many characters.  Schedule name length must be 52 characters or less", request.getScheduleName()), null);
+			throw new CreateScheduleException("because Schedule Name: '%s' has too many characters.  Schedule name length must be 52 characters or less".formatted(request.getScheduleName()), null);
 		}
 		if(!Pattern.matches("^[a-z0-9]([-a-z0-9]*[a-z0-9])?$", request.getScheduleName())) {
 			throw new CreateScheduleException("Invalid Format for Schedule Name. Schedule name can only contain lowercase letters, numbers 0-9 and hyphens.", null);

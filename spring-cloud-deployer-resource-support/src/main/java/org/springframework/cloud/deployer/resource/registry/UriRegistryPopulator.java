@@ -77,15 +77,15 @@ public class UriRegistryPopulator implements ResourceLoaderAware {
 						URI uri = new URI(properties.getProperty(key));
 						boolean validUri = true;
 						if (uri == null || StringUtils.isEmpty(uri)) {
-							logger.warn(String.format("Error when registering '%s': URI is required", key));
+							logger.warn("Error when registering '%s': URI is required".formatted(key));
 							validUri = false;
 						}
 						if (validUri && !StringUtils.hasText(uri.getScheme())) {
-							logger.warn(String.format("Error when registering '%s' with URI %s: URI scheme must be specified", key, uri));
+							logger.warn("Error when registering '%s' with URI %s: URI scheme must be specified".formatted(key, uri));
 							validUri = false;
 						}
 						if (validUri && !StringUtils.hasText(uri.getSchemeSpecificPart())) {
-							logger.warn(String.format("Error when registering '%s' with URI %s: URI scheme-specific part must be specified", key, uri));
+							logger.warn("Error when registering '%s' with URI %s: URI scheme-specific part must be specified".formatted(key, uri));
 							validUri = false;
 						}
 						if (!overwrite) {
@@ -105,8 +105,8 @@ public class UriRegistryPopulator implements ResourceLoaderAware {
 						}
 					}
 					catch (URISyntaxException e) {
-						throw new IllegalArgumentException(String.format("'%s' for '%s' is not a properly formed URI",
-								properties.getProperty(key), key), e);
+						throw new IllegalArgumentException("'%s' for '%s' is not a properly formed URI".formatted(
+                                properties.getProperty(key), key), e);
 					}
 				}
 			}

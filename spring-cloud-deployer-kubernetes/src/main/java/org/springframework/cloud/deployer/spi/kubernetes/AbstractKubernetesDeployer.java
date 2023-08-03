@@ -328,10 +328,10 @@ public class AbstractKubernetesDeployer {
 		String groupId = request.getDeploymentProperties().get(AppDeployer.GROUP_PROPERTY_KEY);
 		String deploymentId;
 		if (groupId == null) {
-			deploymentId = String.format("%s", request.getDefinition().getName());
+			deploymentId = "%s".formatted(request.getDefinition().getName());
 		}
 		else {
-			deploymentId = String.format("%s-%s", groupId, request.getDefinition().getName());
+			deploymentId = "%s-%s".formatted(groupId, request.getDefinition().getName());
 		}
 		// Kubernetes does not allow . in the name and does not allow uppercase in the name
 		return deploymentId.replace('.', '-').toLowerCase();

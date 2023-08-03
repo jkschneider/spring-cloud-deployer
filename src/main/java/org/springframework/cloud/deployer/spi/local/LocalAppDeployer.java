@@ -206,7 +206,7 @@ public class LocalAppDeployer extends AbstractLocalDeployerSupport implements Ap
 			running.remove(id);
 		}
 		else {
-			throw new IllegalStateException(String.format("App with deploymentId %s is not in a deployed state.", id));
+			throw new IllegalStateException("App with deploymentId %s is not in a deployed state.".formatted(id));
 		}
 	}
 
@@ -354,7 +354,7 @@ public class LocalAppDeployer extends AbstractLocalDeployerSupport implements Ap
 	}
 
 	private static String toGuid(String deploymentId, int appIndex) {
-		return String.format("%s-%s", deploymentId, appIndex);
+		return "%s-%s".formatted(deploymentId, appIndex);
 	}
 
 	private static class AppInstance implements Instance, AppInstanceStatus {
